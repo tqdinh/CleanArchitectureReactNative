@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.templetecodebase.app-mergeDebugResources-22:/values-ta/values-ta.xml",
+            "outputFile": "com.templetecodebase.app-mergeDebugResources-29:/values-ta/values-ta.xml",
             "map": [
                 {
                     "source": "/Users/truongdinh/.gradle/caches/transforms-3/b14585e0ae3314e7a64bac79062dab1c/transformed/appcompat-1.4.1/res/values-ta/values-ta.xml",
