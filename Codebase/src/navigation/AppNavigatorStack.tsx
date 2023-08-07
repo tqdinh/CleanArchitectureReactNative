@@ -55,7 +55,6 @@ const MainTabNavigator = () => {
                     const uiInfo: UITabSetting | undefined = mainScreen.find((e: any) => {
                         return e.name = route.name
                     })
-                    console.log(JSON.stringify(uiInfo, null, 1))
                     if (uiInfo) {
                         // return <Ionicons name={focused ? uiInfo.icon_name_fc : uiInfo.icon_name} size={20} color={focused ? uiInfo.color_fc : uiInfo.color} />
                         return <Ionicons name={'newspaper'} size={20} color={focused ? uiInfo.color_fc : uiInfo.color} />

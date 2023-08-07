@@ -13,7 +13,7 @@ const AppNavigator = () => {
                     headerShown: false
                 }}
             >
-                <AppStack.Screen component={MainNavigator} name='Main' />
+                <AppStack.Screen component={MainNavigator} name='MainNavigator' />
             </AppStack.Navigator>
         </NavigationContainer>
     )
