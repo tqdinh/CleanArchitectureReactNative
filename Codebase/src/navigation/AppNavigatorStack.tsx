@@ -3,8 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Colors } from 'themes/colors'
 import { Ionicons } from 'themes/appIcon'
 import Home from 'screens/Home/Home'
-import { Icon } from 'react-native-vector-icons/Icon'
-import Camera from 'screens/Camera/Camera'
+import TrekkingCamera from 'screens/TrekkingCamera/TrekkingCamera'
 const MainTab = createBottomTabNavigator()
 const AuthStack = createNativeStackNavigator()
 const AuthNavigator = () => {
@@ -82,8 +81,7 @@ const MainTabNavigator = () => {
                 )
             })} */}
             <MainTab.Screen component={Home} name='home' />
-            <MainTab.Screen component={Home} name='homesss' />
-            <MainTab.Screen component={Camera} name='camera' />
+            <MainTab.Screen component={TrekkingCamera} name='Camera' />
 
             {/* <MainTab.Screen component={Home} name='Trang chủ0' />
             <MainTab.Screen component={Home} name='Trang chủ1' /> */}
