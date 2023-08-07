@@ -2,8 +2,12 @@ import EntityLogin from "domain/entities/EntityLogin";
 import { LoginDataSource } from "./LoginDataSource";
 import { useDispatch } from "react-redux";
 import { authActions } from "redux/auth/authSlice";
+import CommonDataSource from "../CommonDataSource";
 
-export class LoginRemoteDataSource implements LoginDataSource {
+export class LoginRemoteDataSource extends LoginDataSource implements CommonDataSource {
+    ResetQuerryStatus() {
+        this.dispatch(authActions.resetStatus())
+    }
 
     dispatch = useDispatch()
     Login(entityLogin: EntityLogin) {

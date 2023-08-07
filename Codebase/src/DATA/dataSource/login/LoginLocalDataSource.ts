@@ -2,6 +2,9 @@ import EntityAuthentication from "DOMAIN/entities/EntityAuthentication";
 import { LoginDataSource } from "./LoginDataSource";
 
 export class LoginLocalDataSource implements LoginDataSource {
+    ResetQuerryStatus() {
+
+    }
     token: string = ""
     SaveAuthentication(entityAuthentication: EntityAuthentication) {
 

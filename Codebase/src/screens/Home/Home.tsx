@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux"
 const Home = () => {
     const dispatch = useDispatch()
     const {
+        authUser,
         loadHome,
         login
     } = useHomeViewModel()
@@ -15,6 +16,7 @@ const Home = () => {
         }} style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
             <Text style={{ backgroundColor: "red", padding: 10 }}>Login</Text>
         </TouchableOpacity>
+        <Text> {JSON.stringify(authUser, null, 1)}</Text>
 
     </>)
 }

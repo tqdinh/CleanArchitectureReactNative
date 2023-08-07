@@ -1,3 +1,4 @@
-export abstract class LoginDataSource {
+import CommonDataSource from "../CommonDataSource";
 
+export abstract class LoginDataSource {
 }
