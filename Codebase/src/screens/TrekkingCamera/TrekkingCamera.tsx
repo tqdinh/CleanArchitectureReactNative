@@ -1,5 +1,6 @@
 import {
   Dimensions,
+  Text,
   TouchableOpacity,
   View,
 } from "react-native"
@@ -19,7 +20,7 @@ const TrekkingCamera = () => {
     onInitialized,
     onError,
     requestCameraPermissions,
-    takePhoto 
+    takePhoto
   } = useCameraViewModel()
 
   return (
@@ -28,7 +29,7 @@ const TrekkingCamera = () => {
         <>
           <Camera
             ref={cameraRef}
-            style={{ height: height * 0.8 }}
+            style={{ height: height * 0.75 }}
             device={device}
             isActive={isActive}
             onInitialized={onInitialized}
@@ -38,11 +39,19 @@ const TrekkingCamera = () => {
             audio={hasMicrophonePermission}
             orientation="portrait"
           />
+          <View style={cameraStyle.buttonContainer}>
+            <TouchableOpacity
+              style={cameraStyle.button}
+              onPress={takePhoto}
+            >
+              <View style={cameraStyle.captureButton} />
+              <View style={cameraStyle.captureButtonBorder}></View>
+            </TouchableOpacity>
+          </View>
 
-          <TouchableOpacity
-            style={cameraStyle.captureButton}
-            onPress={takePhoto}
-          />
+          <View style={cameraStyle.textContainer}>
+            <Text style={cameraStyle.text}>Camera</Text>
+          </View>
         </>
       )}
     </View>
