@@ -8,10 +8,11 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { delay } from 'redux-saga/effects'
 import { selectAuth } from 'redux/auth/authSlice'
+import { useNavigation } from '@react-navigation/native'
 
 const LoginUserPassViewModel = () => {
   const authUser = useSelector(selectAuth)
-
+  const navigation = useNavigation<any>()
   const remoteLogin = new LoginRemoteDataSource()
   const localLogin = new LoginLocalDataSource()
   const loginUsecase = new LoginUsecaseImpl(new LoginRepositoryImpl(localLogin, remoteLogin))
@@ -34,9 +35,13 @@ const LoginUserPassViewModel = () => {
     const loginEntity = new EntityLogin(user, pass)
     loginUsecase.Login(loginEntity)
   }
+  const goToMain = () => {
+    navigation.navigate("Main")
+  }
   return {
     authUser,
-    login
+    login,
+    goToMain
   }
 }
 

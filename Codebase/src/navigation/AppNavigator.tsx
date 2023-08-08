@@ -18,12 +18,14 @@ const AppNavigator = () => {
                     headerShown: false
                 }}
             >
-                {
+                <AppStack.Screen component={MainNavigator} name='MainNavigator' />
+                {/* {
                     authentication.is_valid() ? (<AppStack.Screen component={MainNavigator} name='MainNavigator' />) : (
-                        <AppStack.Screen component={AuthNavigator} name={AuthNavigator.name} />
-                    )
 
-                }
+                        <AppStack.Screen component={AuthNavigator} name={AuthNavigator.name}
+                        />
+                    )
+                } */}
 
             </AppStack.Navigator>
         </NavigationContainer>

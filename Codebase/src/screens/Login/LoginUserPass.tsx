@@ -19,7 +19,8 @@ import { Colors } from 'themes/colors'
 const LoginUserPass = () => {
   const {
     authUser,
-    login
+    login,
+    goToMain
   } = useLoginUserPassViewModel()
   const [username, setUsername] = useState<string>('')
   const [password, setpassword] = useState<string>('')
@@ -81,7 +82,7 @@ const LoginUserPass = () => {
           />
           <CustomButton
             onPress={() => {
-              //navigate.navigate('LoginOTP')
+              goToMain()
             }}
             top={15}
             color={Colors.SystemWhite}
