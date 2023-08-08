@@ -1,7 +1,6 @@
-import { useIsFocused } from "@react-navigation/native"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { AppState, AppStateStatus } from "react-native"
-import { Camera, CameraRuntimeError, useCameraDevices } from "react-native-vision-camera"
+import { Camera } from "react-native-vision-camera"
 
 const CameraViewModel = () => {
   const useIsForeground = (): boolean => {
@@ -15,38 +14,22 @@ const CameraViewModel = () => {
     }, [setIsForeground])
     return isForeground
   }
-  
-  const cameraRef = useRef<Camera>(null)
-  const [hasMicrophonePermission, setHasMicrophonePermission] = useState(false)
-  // check if camera page is active
-  const isFocussed = useIsFocused()
-  const isForeground = useIsForeground()
-  const isActive = isFocussed && isForeground
-  // camera format settings
-  const devices = useCameraDevices()
-  const device = devices["back"]
 
   const requestCameraPermissions = async () => {
-    // TODO: make it more stable
-    await Camera.requestCameraPermission()
-    await Camera.requestMicrophonePermission()
+    const cameraPermission = await Camera.requestCameraPermission()
+    if (cameraPermission === 'denied') {
+      console.log("Camera permission is denied!")
+      return
+    }
+    const microPermission = await Camera.requestMicrophonePermission()
+    if (microPermission === 'denied') {
+      console.log("Micro permission is denied!")
+      return
+    }
+    return
   }
 
-  const onError = useCallback((error: CameraRuntimeError) => {
-    console.error(error)
-  }, [])
-
-  const onInitialized = useCallback(() => {
-    console.log("Camera initialized!")
-  }, [])
-
-  useEffect(() => {
-    Camera.getMicrophonePermissionStatus().then((status) =>
-      setHasMicrophonePermission(status === "authorized")
-    )
-  }, [])
-
-  const takePhoto = async () => {
+  const takePhoto = async (cameraRef: any) => {
     if (cameraRef.current === null) {
       console.log("cameraRef is null!")
       return
@@ -57,14 +40,9 @@ const CameraViewModel = () => {
   }
 
   return {
-    cameraRef,
-    device,
-    isActive,
-    hasMicrophonePermission,
-    requestCameraPermissions,
-    onError,
-    onInitialized,
     takePhoto,
+    requestCameraPermissions,
+    useIsForeground
   }
 }
 export const useCameraViewModel = CameraViewModel

@@ -1,27 +1,42 @@
-import {
-  Dimensions,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native"
+import { Dimensions, Text, TouchableOpacity, View } from "react-native"
 import { useCameraViewModel } from "./TrekkingCameraViewModel"
 import {
   Camera,
+  useCameraDevices,
 } from "react-native-vision-camera"
 import { cameraStyle } from "./style"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { useFocusEffect, useIsFocused } from "@react-navigation/native"
 
 const TrekkingCamera = () => {
   const height = Dimensions.get("window").height
-  const {
-    cameraRef,
-    device,
-    isActive,
-    hasMicrophonePermission,
-    onInitialized,
-    onError,
-    requestCameraPermissions,
-    takePhoto
-  } = useCameraViewModel()
+  const { requestCameraPermissions, takePhoto, useIsForeground } =
+    useCameraViewModel()
+  const cameraRef = useRef<Camera>(null)
+  const [hasMicrophonePermission, setHasMicrophonePermission] = useState(false)
+  const [isCameraInitiated, setIsCameraInitiated] = useState(false)
+  // check if camera page is active
+  const isFocussed = useIsFocused()
+  const isForeground = useIsForeground()
+  const isActive = isFocussed && isForeground
+  // camera format settings
+  const devices = useCameraDevices()
+  const device = devices["back"]
+
+  useFocusEffect(() => {
+    Camera.getMicrophonePermissionStatus().then((status) =>
+      setHasMicrophonePermission(status === "authorized")
+    )
+  })
+
+  useEffect(() => {
+    requestCameraPermissions()
+  }, [])
+
+  const onInitialized = useCallback(() => {
+    console.log("Camera initialized!!")
+    setIsCameraInitiated(true)
+  }, [])
 
   return (
     <View style={cameraStyle.container}>
@@ -33,7 +48,6 @@ const TrekkingCamera = () => {
             device={device}
             isActive={isActive}
             onInitialized={onInitialized}
-            onError={onError}
             enableZoomGesture={false}
             photo={true}
             audio={hasMicrophonePermission}
@@ -42,10 +56,11 @@ const TrekkingCamera = () => {
           <View style={cameraStyle.buttonContainer}>
             <TouchableOpacity
               style={cameraStyle.button}
-              onPress={takePhoto}
+              onPress={() => takePhoto(cameraRef)}
+              disabled={!(isCameraInitiated && isActive)}
             >
               <View style={cameraStyle.captureButton} />
-              <View style={cameraStyle.captureButtonBorder}></View>
+              <View style={cameraStyle.captureButtonBorder} />
             </TouchableOpacity>
           </View>
 
