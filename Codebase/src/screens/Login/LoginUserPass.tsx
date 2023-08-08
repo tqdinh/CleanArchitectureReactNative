@@ -22,8 +22,8 @@ const LoginUserPass = () => {
     login,
     goToMain
   } = useLoginUserPassViewModel()
-  const [username, setUsername] = useState<string>('')
-  const [password, setpassword] = useState<string>('')
+  const [username, setUsername] = useState<string>('dinh.truong.cus')
+  const [password, setpassword] = useState<string>('ab1234cd')
   const [hidePassword, setHidePassword] = useState<boolean>(true)
 
 
@@ -87,7 +87,7 @@ const LoginUserPass = () => {
             top={15}
             color={Colors.SystemWhite}
             textColor={Colors.SystemPrimary}
-            text='Đăng nhập với OTP'
+            text='Skip'
             disabled={false}
           />
         </View>

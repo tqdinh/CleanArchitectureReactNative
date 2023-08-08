@@ -8,6 +8,7 @@ import EntityAuthentication from "DOMAIN/entities/EntityAuthentication"
 const AppNavigator = () => {
 
     const authUserRespone = useSelector(selectAuth)
+    console.log("-----------", JSON.stringify(authUserRespone, null, 1))
     const authentication = new EntityAuthentication(authUserRespone.access, authUserRespone.refresh, authUserRespone.avatar)
     const AppStack = createNativeStackNavigator()
 
@@ -18,14 +19,13 @@ const AppNavigator = () => {
                     headerShown: false
                 }}
             >
-                <AppStack.Screen component={MainNavigator} name='MainNavigator' />
-                {/* {
-                    authentication.is_valid() ? (<AppStack.Screen component={MainNavigator} name='MainNavigator' />) : (
 
+                {
+                    authentication.is_valid() ? (<AppStack.Screen component={MainNavigator} name='MainNavigator' />) : (
                         <AppStack.Screen component={AuthNavigator} name={AuthNavigator.name}
                         />
                     )
-                } */}
+                }
 
             </AppStack.Navigator>
         </NavigationContainer>

@@ -5,40 +5,9 @@ import { Ionicons } from 'themes/appIcon'
 import Home from 'screens/Home/Home'
 import { Icon } from 'react-native-vector-icons/Icon'
 import LoginUserPass from 'screens/Login/LoginUserPass'
+import Logout from 'screens/Logout/Logout'
 const MainTab = createBottomTabNavigator()
 const AuthStack = createNativeStackNavigator()
-
-
-const mainScreen: Array<UITabSetting> = [
-    {
-        name: 'Home',
-        component: Home,
-        icon_name_fc: 'home',
-        icon_name: 'home-outline',
-        color_fc: Colors.SystemPrimary,
-        color: Colors.SystemGrey02,
-        isShowBadge: false
-    }
-    , {
-        name: 'TET',
-        component: Home,
-        icon_name_fc: 'home',
-        icon_name: 'home-outline',
-        color_fc: Colors.SystemPrimary,
-        color: Colors.SystemGrey02,
-        isShowBadge: false
-    }
-]
-
-
-
-const AuthNavigator = () => {
-    return (
-        <AuthStack.Navigator screenOptions={{ headerShown: true }}>
-            <AuthStack.Screen name={LoginUserPass.name} component={LoginUserPass} />
-        </AuthStack.Navigator>
-    )
-}
 
 interface UITabSetting {
     name: string
@@ -49,6 +18,37 @@ interface UITabSetting {
     color_fc: any
     isShowBadge: boolean
 }
+const tabs: Array<UITabSetting> = [
+    {
+        name: 'Home',
+        component: Home,
+        icon_name_fc: 'home',
+        icon_name: 'home-outline',
+        color_fc: Colors.SystemPrimary,
+        color: Colors.SystemGrey02,
+        isShowBadge: false
+    }
+    , {
+        name: 'Account',
+        component: Logout,
+        icon_name_fc: 'home',
+        icon_name: 'home-outline',
+        color_fc: Colors.SystemPrimary,
+        color: Colors.SystemGrey02,
+        isShowBadge: false
+    }
+]
+
+const AuthNavigator = () => {
+    return (
+        <AuthStack.Navigator screenOptions={{ headerShown: true }}>
+            <AuthStack.Screen name={LoginUserPass.name} component={LoginUserPass} />
+            <AuthStack.Screen name='Main' component={MainTabNavigator} />
+        </AuthStack.Navigator>
+    )
+}
+
+
 
 
 
@@ -58,7 +58,7 @@ const MainTabNavigator = () => {
             initialRouteName={'Main'}
             screenOptions={({ route }) => ({
                 tabBarIcon: ({ focused, color, size }) => {
-                    const uiInfo: UITabSetting | undefined = mainScreen.find((e: any) => {
+                    const uiInfo: UITabSetting | undefined = tabs.find((e: any) => {
                         return e.name === route.name
                     })
                     if (uiInfo) {
@@ -79,8 +79,7 @@ const MainTabNavigator = () => {
                 headerShown: false
             })}
         >
-            {mainScreen.map((e: any) => {
-                console.log(JSON.stringify(mainScreen, null, 1))
+            {tabs.map((e: any) => {
                 return (
                     <MainTab.Screen component={e.component} name={e.name} key={e.name} />
                 )
@@ -89,14 +88,11 @@ const MainTabNavigator = () => {
     )
 }
 
-
 const MainStack = createNativeStackNavigator()
 const MainNavigator = () => {
     return (
         <MainStack.Navigator screenOptions={{ headerShown: false }}>
-
             <MainStack.Screen name='Main' component={MainTabNavigator} />
-            <MainStack.Screen name={LoginUserPass.name} component={LoginUserPass} />
         </MainStack.Navigator>
     )
 }

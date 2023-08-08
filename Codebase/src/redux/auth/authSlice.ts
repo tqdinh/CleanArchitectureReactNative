@@ -44,6 +44,12 @@ const authSlice = createSlice({
         },
         RESET_STATUS(state) {
             state.STATUS_QUERRY = QUERRY_STATUS.IDLE
+        },
+        logout(state) {
+            state.access = initialState.access
+            state.avatar = initialState.avatar
+            state.refresh = initialState.refresh
+            state.username = initialState.username
         }
     }
 })
