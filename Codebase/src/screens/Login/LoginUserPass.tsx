@@ -36,7 +36,7 @@ const LoginUserPass = () => {
       <SafeAreaView style={styles.container}>
         <View style={styles.imageLogoContainer}>
           <Image
-            source={require('../../assets/images/logos/logo.png')}
+            source={{}}
             resizeMode='contain'
           />
         </View>
