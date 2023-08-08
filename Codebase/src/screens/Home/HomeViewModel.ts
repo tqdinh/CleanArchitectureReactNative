@@ -22,7 +22,7 @@ const HomeViewModel = () => {
     const authUserEntity = new EntityAuthentication(authUser.access, authUser.refresh, authUser.avatar)
     if (authUserEntity.is_valid()) {
       loginUsecase.SaveAuthentication(authUserEntity)
-      delay(3000)
+      delay(1000)
       loginUsecase.ResetQuerryStatus()
     }
     else {

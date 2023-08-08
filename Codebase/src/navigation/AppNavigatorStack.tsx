@@ -4,25 +4,10 @@ import { Colors } from 'themes/colors'
 import { Ionicons } from 'themes/appIcon'
 import Home from 'screens/Home/Home'
 import { Icon } from 'react-native-vector-icons/Icon'
+import LoginUserPass from 'screens/Login/LoginUserPass'
 const MainTab = createBottomTabNavigator()
 const AuthStack = createNativeStackNavigator()
-const AuthNavigator = () => {
-    return (
-        <AuthStack.Navigator screenOptions={{ headerShown: true }}>
-            {/* <AuthStack.Screen name='LoginOTP' component={LoginOTP} /> */}
-        </AuthStack.Navigator>
-    )
-}
 
-interface UITabSetting {
-    name: string
-    component: any
-    icon_name: string
-    icon_name_fc: string
-    color: any
-    color_fc: any
-    isShowBadge: boolean
-}
 
 const mainScreen: Array<UITabSetting> = [
     {
@@ -44,6 +29,27 @@ const mainScreen: Array<UITabSetting> = [
     //     isShowBadge: false
     // }
 ]
+
+
+
+const AuthNavigator = () => {
+    return (
+        <AuthStack.Navigator screenOptions={{ headerShown: true }}>
+            <AuthStack.Screen name={LoginUserPass.name} component={LoginUserPass} />
+        </AuthStack.Navigator>
+    )
+}
+
+interface UITabSetting {
+    name: string
+    component: any
+    icon_name: string
+    icon_name_fc: string
+    color: any
+    color_fc: any
+    isShowBadge: boolean
+}
+
 
 
 const MainTabNavigator = () => {
@@ -119,4 +125,4 @@ const MainNavigator = () => {
     )
 }
 
-export { MainNavigator }
+export { MainNavigator, AuthNavigator }

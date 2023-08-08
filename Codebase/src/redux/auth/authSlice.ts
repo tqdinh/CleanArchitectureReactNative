@@ -42,7 +42,7 @@ const authSlice = createSlice({
         loginFail(state, action: any) {
             state.STATUS_QUERRY = QUERRY_STATUS.FAIL
         },
-        resetStatus(state) {
+        RESET_STATUS(state) {
             state.STATUS_QUERRY = QUERRY_STATUS.IDLE
         }
     }

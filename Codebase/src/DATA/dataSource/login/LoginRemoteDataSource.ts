@@ -6,7 +6,7 @@ import CommonDataSource from "../CommonDataSource";
 
 export class LoginRemoteDataSource extends LoginDataSource implements CommonDataSource {
     ResetQuerryStatus() {
-        this.dispatch(authActions.resetStatus())
+        this.dispatch(authActions.RESET_STATUS())
     }
 
     dispatch = useDispatch()
