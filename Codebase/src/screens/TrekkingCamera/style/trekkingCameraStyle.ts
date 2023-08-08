@@ -49,4 +49,10 @@ export const cameraStyle = StyleSheet.create({
     fontWeight: "bold",
     alignSelf: 'center',
   },
+  arrowContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: height * 0.4,
+    opacity: 0.5,
+  }
 })
