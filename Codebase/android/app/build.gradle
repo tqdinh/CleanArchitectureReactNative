@@ -1,4 +1,13 @@
 apply plugin: "com.android.application"
+project.ext.envConfigFiles = [
+   productiondebug: ".env.production",
+   productionrelease: ".env.production",
+   developmentrelease: ".env.development",
+   developmentdebug: ".env.development",
+   stagingrelease: ".env.staging",
+   stagingdebug: ".env.staging"
+]
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle" // <- add this line
 apply plugin: "com.facebook.react"
 
 /**
@@ -68,19 +77,52 @@ def enableProguardInReleaseBuilds = false
  */
 def jscFlavor = 'org.webkit:android-jsc:+'
 
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle" 
+
 android {
     ndkVersion rootProject.ext.ndkVersion
-
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     namespace "com.templetecodebase"
+    flavorDimensions "default"
+    productFlavors {
+        production {
+            applicationId project.env.get("ANDROID_APP_ID")
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.templetecodebase"
+            versionName project.env.get("VERSION_NAME_ANDROID")
+        }
+        staging {
+            applicationId project.env.get("ANDROID_APP_ID")
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.templetecodebase"
+            versionName project.env.get("VERSION_NAME_ANDROID")
+        }
+        development {
+            applicationId project.env.get("ANDROID_APP_ID")
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.templetecodebase"
+            versionName project.env.get("VERSION_NAME_ANDROID")
+           
+            
+        }
+    }
+
+
+   
     defaultConfig {
-        applicationId "com.templetecodebase"
+        applicationId project.env.get("ANDROID_APP_ID")
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName project.env.get("VERSION_NAME_ANDROID")
     }
+
+   
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -92,6 +134,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            matchingFallbacks = ['debug', 'release'] // <- add this line
         }
         release {
             // Caution! In production, you need to generate your own keystore file.

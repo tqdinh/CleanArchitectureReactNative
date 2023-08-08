@@ -4,25 +4,11 @@ import { Colors } from 'themes/colors'
 import { Ionicons } from 'themes/appIcon'
 import Home from 'screens/Home/Home'
 import TrekkingCamera from 'screens/TrekkingCamera/TrekkingCamera'
+import { Icon } from 'react-native-vector-icons/Icon'
+import LoginUserPass from 'screens/Login/LoginUserPass'
 const MainTab = createBottomTabNavigator()
 const AuthStack = createNativeStackNavigator()
-const AuthNavigator = () => {
-    return (
-        <AuthStack.Navigator screenOptions={{ headerShown: true }}>
-            {/* <AuthStack.Screen name='LoginOTP' component={LoginOTP} /> */}
-        </AuthStack.Navigator>
-    )
-}
 
-interface UITabSetting {
-    name: string
-    component: any
-    icon_name: string
-    icon_name_fc: string
-    color: any
-    color_fc: any
-    isShowBadge: boolean
-}
 
 const mainScreen: Array<UITabSetting> = [
     {
@@ -46,6 +32,27 @@ const mainScreen: Array<UITabSetting> = [
 ]
 
 
+
+const AuthNavigator = () => {
+    return (
+        <AuthStack.Navigator screenOptions={{ headerShown: true }}>
+            <AuthStack.Screen name={LoginUserPass.name} component={LoginUserPass} />
+        </AuthStack.Navigator>
+    )
+}
+
+interface UITabSetting {
+    name: string
+    component: any
+    icon_name: string
+    icon_name_fc: string
+    color: any
+    color_fc: any
+    isShowBadge: boolean
+}
+
+
+
 const MainTabNavigator = () => {
     return (
         <MainTab.Navigator
@@ -55,7 +62,6 @@ const MainTabNavigator = () => {
                     const uiInfo: UITabSetting | undefined = mainScreen.find((e: any) => {
                         return e.name = route.name
                     })
-                    console.log(JSON.stringify(uiInfo, null, 1))
                     if (uiInfo) {
                         // return <Ionicons name={focused ? uiInfo.icon_name_fc : uiInfo.icon_name} size={20} color={focused ? uiInfo.color_fc : uiInfo.color} />
                         return <Ionicons name={'newspaper'} size={20} color={focused ? uiInfo.color_fc : uiInfo.color} />
@@ -120,4 +126,4 @@ const MainNavigator = () => {
     )
 }
 
-export { MainNavigator }
+export { MainNavigator, AuthNavigator }

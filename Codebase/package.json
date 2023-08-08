@@ -6,7 +6,13 @@
     "start": "react-native start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "android:staging": "react-native run-android --variant=stagingdebug --appId com.myapp.stg",
+    "android:staging-release": "react-native run-android --variant=stagingrelease",
+    "android:dev": "react-native run-android --variant=developmentdebug --appId com.myapp.dev",
+    "android:dev-release": "react-native run-android --variant=developmentrelease",
+    "android:prod": "react-native run-android --variant=productiondebug --appId com.myapp.pro",
+    "android:prod-release": "react-native run-android --variant=productionrelease"
   },
   "dependencies": {
     "@react-native-community/blur": "^4.3.2",
@@ -15,10 +21,12 @@
     "@react-navigation/native-stack": "^6.9.13",
     "@redux-saga/core": "^1.2.3",
     "@reduxjs/toolkit": "^1.9.5",
+    "axios": "^1.4.0",
     "expo": "~49.0.5",
     "expo-status-bar": "~1.6.0",
     "react": "18.2.0",
     "react-native": "0.72.3",
+    "react-native-config": "^1.5.1",
     "react-native-eject": "^0.2.0",
     "react-native-gesture-handler": "^2.12.1",
     "react-native-pressable-opacity": "^1.0.10",
