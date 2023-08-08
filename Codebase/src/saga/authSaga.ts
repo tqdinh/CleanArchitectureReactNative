@@ -8,9 +8,6 @@ function* handleLogin(action: PayloadAction<AuthRequestPayload>): any {
   try {
     const res = yield call(login_tmp, REQUEST_METHODS.POST, action.payload)
     yield put(authActions.loginSuccess(res))
-    delay(1000)
-    yield put(authActions.RESET_STATUS())
-
   }
   catch (error: any) {
     yield put(authActions.loginFail(error.response))
