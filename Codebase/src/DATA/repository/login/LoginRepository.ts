@@ -8,6 +8,7 @@ import CommonRepository from "./CommonRepository"
 export interface LoginRepository extends CommonRepository {
     Login(entityLogin: EntityLogin): any
     SaveAuthentication(entityAuthentication: EntityAuthentication): any
+    Logout(): any
 }
 export class LoginRepositoryImpl implements LoginRepository {
     private localDataSource: LoginDataSource
@@ -15,6 +16,10 @@ export class LoginRepositoryImpl implements LoginRepository {
     constructor(_localDataSource: LoginDataSource, _remoteDataSource: LoginDataSource) {
         this.localDataSource = _localDataSource
         this.remoteDataSource = _remoteDataSource
+    }
+    Logout() {
+        this.remoteDataSource.Logout()
+        this.localDataSource.Logout()
     }
     ResetQuerryStatus() {
         this.remoteDataSource.ResetQuerryStatus()

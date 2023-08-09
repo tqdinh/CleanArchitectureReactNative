@@ -4,7 +4,11 @@ import { useDispatch } from "react-redux";
 import { authActions } from "redux/auth/authSlice";
 import CommonDataSource from "../CommonDataSource";
 
-export class LoginRemoteDataSource extends LoginDataSource implements CommonDataSource {
+export class LoginRemoteDataSource implements CommonDataSource {
+    Logout() {
+        console.log("---------------logout")
+        this.dispatch(authActions.logout())
+    }
     ResetQuerryStatus() {
         this.dispatch(authActions.RESET_STATUS())
     }
