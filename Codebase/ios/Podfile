@@ -1,4 +1,5 @@
 # Resolve react_native_pods.rb with node to allow for hoisting
+$RNMapboxMapsImpl = 'mapbox'
 require Pod::Executable.execute_command('node', ['-p',
   'require.resolve(
     "react-native/scripts/react_native_pods.rb",
@@ -50,6 +51,10 @@ target 'TempleteCodebase' do
     # Pods for testing
   end
 
+  pre_install do |installer|
+    $RNMapboxMaps.pre_install(installer)
+  end
+
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
@@ -58,5 +63,6 @@ target 'TempleteCodebase' do
       :mac_catalyst_enabled => false
     )
     __apply_Xcode_12_5_M1_post_install_workaround(installer)
+    $RNMapboxMaps.post_install(installer)
   end
 end
