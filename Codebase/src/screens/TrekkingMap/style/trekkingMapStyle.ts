@@ -34,6 +34,7 @@ export const trekkingMapStyle = StyleSheet.create({
   text: {
     fontSize: 11,
     alignSelf: "center",
+    color: "black",
   },
   buttonCurrentPosition: {
     position: "absolute",
@@ -45,5 +46,14 @@ export const trekkingMapStyle = StyleSheet.create({
     marginTop: 30,
     right: 10,
     justifyContent: "center",
+  },
+  carouselContainer: {
+    flex: 1,
+  },
+  carousel: {
+    alignSelf: "center",
+  },
+  carouselBackButton: {
+    position: "absolute",
   },
 })
