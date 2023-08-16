@@ -7,6 +7,7 @@ import TrekkingCamera from 'screens/TrekkingCamera/TrekkingCamera'
 import { Icon } from 'react-native-vector-icons/Icon'
 import LoginUserPass from 'screens/Login/LoginUserPass'
 import Logout from 'screens/Logout/Logout'
+import TrekkingMap from 'screens/TrekkingMap/TrekkingMap'
 const MainTab = createBottomTabNavigator()
 const AuthStack = createNativeStackNavigator()
 
@@ -28,8 +29,17 @@ const tabs: Array<UITabSetting> = [
         color_fc: Colors.SystemPrimary,
         color: Colors.SystemGrey02,
         isShowBadge: false
-    }
-    , {
+    },
+    {
+        name: 'Record',
+        component: TrekkingMap,
+        icon_name_fc: 'location',
+        icon_name: 'location',
+        color_fc: Colors.SystemPrimary,
+        color: Colors.SystemGrey02,
+        isShowBadge: false
+    },
+    {
         name: 'Account',
         component: Logout,
         icon_name_fc: 'home',
@@ -94,6 +104,7 @@ const MainNavigator = () => {
     return (
         <MainStack.Navigator screenOptions={{ headerShown: false }}>
             <MainStack.Screen name='Main' component={MainTabNavigator} />
+            <MainStack.Screen name='TrekkingCamera' component={TrekkingCamera} />
         </MainStack.Navigator>
     )
 }

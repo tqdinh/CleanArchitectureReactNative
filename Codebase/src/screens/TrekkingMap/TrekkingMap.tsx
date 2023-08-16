@@ -1,10 +1,12 @@
 import { Text, TouchableOpacity, View } from "react-native"
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 import MapboxGL, { UserLocationRenderMode } from "@rnmapbox/maps"
 import { trekkingMapStyle } from "./style"
 import { MaterialCommunityIcons, MaterialIcons } from "themes/appIcon"
 import PhotoCarousel from "./components/PhotoCarousel"
 import { testingPhotos } from "./components/testingPhotos"
+import { useFocusEffect } from "@react-navigation/native"
+import { useTrekkingMapViewModel } from "./TrekkingMapViewModel"
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoidHFkaW5oaGNtdXMiLCJhIjoiY2xsNG5teDZzMDZkcDNmb2dpcnljbGpzbyJ9.FIQMCyKAxOnFiYZCZ9wsHQ"
 )
@@ -13,6 +15,18 @@ const TrekkingMap = () => {
   const [isPause, setIsPause] = useState(true)
   const [shownRecordsCarousel, setShownRecordsCarousel] = useState(false)
   const [followUserLocation, setFollowUserLocation] = useState(true)
+
+  const { goToTrekkingCamera } = useTrekkingMapViewModel()
+
+  useFocusEffect(
+    useCallback(() => {
+      requestAndroidLocationPermissions()
+    }, []),
+  )
+
+  const requestAndroidLocationPermissions = async () => {
+    await MapboxGL.requestAndroidLocationPermissions()
+  }
 
   return (
     <View style={trekkingMapStyle.container}>
@@ -85,7 +99,7 @@ const TrekkingMap = () => {
           <TouchableOpacity
             onPress={() => {
               if (isPause) {
-                // TODO: Navigate to Camera Screen
+                goToTrekkingCamera()
               } else {
                 setShownRecordsCarousel(true)
               }

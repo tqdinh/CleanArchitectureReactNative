@@ -3,14 +3,23 @@ import { useCameraViewModel } from "./TrekkingCameraViewModel"
 import { Camera, useCameraDevices } from "react-native-vision-camera"
 import { cameraStyle } from "./style"
 import { useCallback, useEffect, useRef, useState } from "react"
-import { useFocusEffect, useIsFocused } from "@react-navigation/native"
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from "@react-navigation/native"
 import Arrow from "./components/Arrow"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 
 const TrekkingCamera = () => {
   const height = Dimensions.get("window").height
   const width = Dimensions.get("window").width
-  const { requestCameraPermissions, takePhoto, useIsForeground } =
-    useCameraViewModel()
+  const {
+    requestCameraPermissions,
+    takePhoto,
+    useIsForeground,
+    goBackToPreviousScreen,
+  } = useCameraViewModel()
   const cameraRef = useRef<Camera>(null)
   const [hasMicrophonePermission, setHasMicrophonePermission] = useState(false)
   const [isCameraInitiated, setIsCameraInitiated] = useState(false)
@@ -21,6 +30,8 @@ const TrekkingCamera = () => {
   // camera format settings
   const devices = useCameraDevices()
   const device = devices["back"]
+
+  const navigation = useNavigation()
 
   useFocusEffect(() => {
     Camera.getMicrophonePermissionStatus().then((status) =>
@@ -73,6 +84,18 @@ const TrekkingCamera = () => {
           </View>
         </>
       )}
+      <TouchableOpacity
+        style={{ position: "absolute", margin: 20 }}
+        onPress={() => {
+          goBackToPreviousScreen()
+        }}
+      >
+        <MaterialIcons
+          name={"arrow-back-ios"}
+          size={40}
+          style={{ alignSelf: "center", color: "black" }}
+        />
+      </TouchableOpacity>
     </View>
   )
 }
