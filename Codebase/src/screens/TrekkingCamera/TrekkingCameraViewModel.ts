@@ -1,15 +1,18 @@
+import { useNavigation } from "@react-navigation/native"
 import { useEffect, useState } from "react"
 import { AppState, AppStateStatus } from "react-native"
 import { Camera } from "react-native-vision-camera"
 
 const CameraViewModel = () => {
+  const navigation = useNavigation()
+
   const useIsForeground = (): boolean => {
     const [isForeground, setIsForeground] = useState(true)
     useEffect(() => {
       const onChange = (state: AppStateStatus): void => {
-        setIsForeground(state === 'active')
+        setIsForeground(state === "active")
       }
-      const listener = AppState.addEventListener('change', onChange)
+      const listener = AppState.addEventListener("change", onChange)
       return () => listener.remove()
     }, [setIsForeground])
     return isForeground
@@ -17,12 +20,12 @@ const CameraViewModel = () => {
 
   const requestCameraPermissions = async () => {
     const cameraPermission = await Camera.requestCameraPermission()
-    if (cameraPermission === 'denied') {
+    if (cameraPermission === "denied") {
       console.log("Camera permission is denied!")
       return
     }
     const microPermission = await Camera.requestMicrophonePermission()
-    if (microPermission === 'denied') {
+    if (microPermission === "denied") {
       console.log("Micro permission is denied!")
       return
     }
@@ -39,10 +42,17 @@ const CameraViewModel = () => {
     console.log({ photo })
   }
 
+  const goBackToPreviousScreen = () => {
+    if (navigation.canGoBack()) {
+      navigation.goBack()
+    }
+  }
+
   return {
     takePhoto,
     requestCameraPermissions,
-    useIsForeground
+    useIsForeground,
+    goBackToPreviousScreen,
   }
 }
 export const useCameraViewModel = CameraViewModel
