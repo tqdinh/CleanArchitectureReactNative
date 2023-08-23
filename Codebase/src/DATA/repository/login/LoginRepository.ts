@@ -31,5 +31,4 @@ export class LoginRepositoryImpl implements LoginRepository {
     Login(entityLogin: EntityLogin) {
         (this.remoteDataSource as LoginRemoteDataSource).Login(entityLogin)
     }
-
 }

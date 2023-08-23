@@ -1,3 +1,3 @@
 export default interface CommonDataSource {
-    ResetQuerryStatus(): any
+    ResetQuerryStatus(): any // this mean that reset status after querry
 }

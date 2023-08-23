@@ -1,19 +1,11 @@
 import EntityLogin from "domain/entities/EntityLogin";
 import { LoginDataSource } from "./LoginDataSource";
-import { useDispatch } from "react-redux";
 import { authActions } from "redux/auth/authSlice";
-import CommonDataSource from "../CommonDataSource";
 
-export class LoginRemoteDataSource implements CommonDataSource {
-    Logout() {
-        console.log("---------------logout")
-        this.dispatch(authActions.logout())
-    }
-    ResetQuerryStatus() {
-        this.dispatch(authActions.RESET_STATUS())
-    }
-
-    dispatch = useDispatch()
+interface LoginRemoteInterface {
+    Login(entityLogin: EntityLogin): any
+}
+export class LoginRemoteDataSource extends LoginDataSource implements LoginRemoteInterface {
     Login(entityLogin: EntityLogin) {
         if (entityLogin.is_valid_username()) {
             const username = entityLogin.getUsername()
@@ -21,4 +13,15 @@ export class LoginRemoteDataSource implements CommonDataSource {
             this.dispatch(authActions.login({ username, password }))
         }
     }
+
+    Logout() {
+        this.dispatch(authActions.logout())
+    }
+    ResetQuerryStatus() {
+        this.dispatch(authActions.RESET_STATUS())
+    }
+
+
+
+
 }
