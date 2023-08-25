@@ -1,10 +1,18 @@
 import { useNavigation } from "@react-navigation/native"
+import { PhotoLocalDataSource } from "DATA/dataSource/photo/PhotoLocalDataSource"
+import { PhotoRepositoryImpl } from "DATA/repository/photo/photoRepository"
+import EntityPhoto from "DOMAIN/entities/EntityPhoto"
+import { PhotoUsecaseImpl } from "DOMAIN/usecases/photo/PhotoUsecase"
 import { useEffect, useState } from "react"
 import { AppState, AppStateStatus } from "react-native"
-import { Camera } from "react-native-vision-camera"
+import { Camera, PhotoFile } from "react-native-vision-camera"
 
 const CameraViewModel = () => {
   const navigation = useNavigation()
+
+  const photoLocalDataSource = new PhotoLocalDataSource()
+  const photoRepository = new PhotoRepositoryImpl(photoLocalDataSource)
+  const photoUsecase = new PhotoUsecaseImpl(photoRepository)
 
   const useIsForeground = (): boolean => {
     const [isForeground, setIsForeground] = useState(true)
@@ -32,14 +40,25 @@ const CameraViewModel = () => {
     return
   }
 
-  const takePhoto = async (cameraRef: any) => {
+  const saveNewPhoto = (photo: PhotoFile) => {
+    const entityPhoto = new EntityPhoto(
+      1, // mock checkpoint_id
+      photo.path, // photo_url
+      photo.path, // photo_name
+      [0, 0], // mock coordinates
+      Date.now() // Date
+    )
+
+    photoUsecase.saveNewPhoto(entityPhoto)
+  }
+
+  const takePhoto = async (cameraRef: React.RefObject<Camera>) => {
     if (cameraRef.current === null) {
       console.log("cameraRef is null!")
       return
     }
     const photo = await cameraRef.current.takePhoto()
-    // TODO: handle save photo
-    console.log({ photo })
+    saveNewPhoto(photo)
   }
 
   const goBackToPreviousScreen = () => {
