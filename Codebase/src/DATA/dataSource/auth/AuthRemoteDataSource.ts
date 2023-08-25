@@ -1,27 +1,22 @@
 import EntityLogin from "domain/entities/EntityLogin";
-import { LoginDataSource } from "./LoginDataSource";
+import { AuthDataSource } from "./AuthDataSource";
 import { authActions } from "redux/auth/authSlice";
+import { fromLoginEntityToLoginRequest } from "CONVERTER/converterAuth";
 
-interface LoginRemoteInterface {
+interface AuthRemoteInterface {
     Login(entityLogin: EntityLogin): any
 }
-export class LoginRemoteDataSource extends LoginDataSource implements LoginRemoteInterface {
+export class AuthRemoteDataSource extends AuthDataSource implements AuthRemoteInterface {
     Login(entityLogin: EntityLogin) {
         if (entityLogin.is_valid_username()) {
-            const username = entityLogin.getUsername()
-            const password = entityLogin.getPassword()
-            this.dispatch(authActions.login({ username, password }))
+            const loginpayload = fromLoginEntityToLoginRequest(entityLogin)
+            this.dispatch(authActions.login(loginpayload))
         }
     }
-
     Logout() {
         this.dispatch(authActions.logout())
     }
     ResetQuerryStatus() {
         this.dispatch(authActions.RESET_STATUS())
     }
-
-
-
-
 }

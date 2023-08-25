@@ -3,15 +3,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { AuthNavigator, MainNavigator } from "./AppNavigatorStack"
 import { useSelector } from "react-redux"
 import { selectAuth } from "redux/auth/authSlice"
-import EntityAuthentication from "DOMAIN/entities/EntityAuthentication"
-
+import { fromAuthResponeToEntityAuth } from "CONVERTER/converterAuth"
 const AppNavigator = () => {
 
     const authUserRespone = useSelector(selectAuth)
-    console.log("-----------", JSON.stringify(authUserRespone, null, 1))
-    const authentication = new EntityAuthentication(authUserRespone.access, authUserRespone.refresh, authUserRespone.avatar)
-    const AppStack = createNativeStackNavigator()
+    const authentication = fromAuthResponeToEntityAuth(authUserRespone)
 
+    const AppStack = createNativeStackNavigator()
     return (
         <NavigationContainer>
             <AppStack.Navigator
@@ -19,7 +17,6 @@ const AppNavigator = () => {
                     headerShown: false
                 }}
             >
-
                 {
                     authentication.is_valid() ? (<AppStack.Screen component={MainNavigator} name='MainNavigator' />) : (
                         <AppStack.Screen component={AuthNavigator} name={AuthNavigator.name}

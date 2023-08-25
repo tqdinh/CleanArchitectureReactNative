@@ -56,7 +56,7 @@ const CustomTextInput = ({
           autoCorrect={false}
         />
         <Icon
-          name={secureTextEntry == true ? 'ios-eye' : 'ios-eye-off'}
+          name={secureTextEntry == true ? 'ios-eye' : 'ios-eye'}
           size={20}
           color='grey'
           onPress={type == 'password' ? onPressHidingPassword : () => { }}

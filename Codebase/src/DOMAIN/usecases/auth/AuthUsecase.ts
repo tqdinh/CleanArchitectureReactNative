@@ -1,17 +1,17 @@
-import { LoginRepository } from "DATA/repository/login/LoginRepository"
+import { AuthRepository } from "DATA/repository/auth/AuthRepository"
 import EntityAuthentication from "DOMAIN/entities/EntityAuthentication"
 import EntityLogin from "DOMAIN/entities/EntityLogin"
 import CommonUsecase from "../CommonUsecase"
 
-export interface LoginUsecase extends CommonUsecase {
+export interface AuthUsecase extends CommonUsecase {
   Login(entityLogin: EntityLogin): any
   SaveAuthentication(entityAuthentication: EntityAuthentication): any
   Logout(): any
 }
 
-export class LoginUsecaseImpl implements LoginUsecase {
-  private repository: LoginRepository
-  constructor(_repository: LoginRepository) {
+export class AuthUsecaseImpl implements AuthUsecase {
+  private repository: AuthRepository
+  constructor(_repository: AuthRepository) {
     this.repository = _repository
   }
   Logout() {

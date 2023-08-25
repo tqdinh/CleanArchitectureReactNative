@@ -1,19 +1,19 @@
-import { LoginDataSource } from "DATA/dataSource/login/LoginDataSource"
-import { LoginLocalDataSource } from "DATA/dataSource/login/LoginLocalDataSource"
-import { LoginRemoteDataSource } from "DATA/dataSource/login/LoginRemoteDataSource"
+import { AuthDataSource } from "DATA/dataSource/auth/AuthDataSource"
+import { AuthLocalDataSource } from "DATA/dataSource/auth/AuthLocalDataSource"
+import { AuthRemoteDataSource } from "DATA/dataSource/auth/AuthRemoteDataSource"
 import EntityAuthentication from "DOMAIN/entities/EntityAuthentication"
 import EntityLogin from "domain/entities/EntityLogin"
 import CommonRepository from "./CommonRepository"
 
-export interface LoginRepository extends CommonRepository {
+export interface AuthRepository extends CommonRepository {
     Login(entityLogin: EntityLogin): any
     SaveAuthentication(entityAuthentication: EntityAuthentication): any
     Logout(): any
 }
-export class LoginRepositoryImpl implements LoginRepository {
-    private localDataSource: LoginDataSource
-    private remoteDataSource: LoginDataSource
-    constructor(_localDataSource: LoginDataSource, _remoteDataSource: LoginDataSource) {
+export class AuthRepositoryImpl implements AuthRepository {
+    private localDataSource: AuthDataSource
+    private remoteDataSource: AuthDataSource
+    constructor(_localDataSource: AuthDataSource, _remoteDataSource: AuthDataSource) {
         this.localDataSource = _localDataSource
         this.remoteDataSource = _remoteDataSource
     }
@@ -26,9 +26,9 @@ export class LoginRepositoryImpl implements LoginRepository {
         this.localDataSource.ResetQuerryStatus()
     }
     SaveAuthentication(entityAuthentication: EntityAuthentication) {
-        (this.localDataSource as LoginLocalDataSource).SaveAuthentication(entityAuthentication)
+        (this.localDataSource as AuthLocalDataSource).SaveAuthentication(entityAuthentication)
     }
     Login(entityLogin: EntityLogin) {
-        (this.remoteDataSource as LoginRemoteDataSource).Login(entityLogin)
+        (this.remoteDataSource as AuthRemoteDataSource).Login(entityLogin)
     }
 }

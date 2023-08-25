@@ -1,14 +1,13 @@
 import EntityAuthentication from "DOMAIN/entities/EntityAuthentication";
-import { LoginDataSource } from "./LoginDataSource";
+import { AuthDataSource } from "./AuthDataSource";
 
-interface LoginLocalInterface {
+interface AuthLocalInterface {
     SaveAuthentication(entityAuthentication: EntityAuthentication): any
 }
 
-export class LoginLocalDataSource extends LoginDataSource implements LoginLocalInterface {
-
+export class AuthLocalDataSource extends AuthDataSource implements AuthLocalInterface {
     SaveAuthentication(entityAuthentication: EntityAuthentication) {
-        throw new Error("Method not implemented.");
+        console.log(`The Token is about to save: ${entityAuthentication.getToken()} ${new Date()}`)
     }
 
     Logout(): void {
