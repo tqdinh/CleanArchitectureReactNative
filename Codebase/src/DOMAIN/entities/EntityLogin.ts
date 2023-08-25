@@ -1,18 +1,18 @@
 export default class EntityLogin {
-    private username: string;
-    private password: string
+    private uname: string;
+    private pass: string
     constructor(_username: string, _passwrd: string) {
-        this.username = _username;
-        this.password = _passwrd
+        this.uname = _username;
+        this.pass = _passwrd
     }
     is_valid_username = () => {
-        return (null != this.username && null != this.password)
+        return (null != this.uname && null != this.pass)
     }
     getPassword = () => {
-        return this.password
+        return this.pass
     }
 
     getUsername = () => {
-        return this.username
+        return this.uname
     }
 }

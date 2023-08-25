@@ -36,10 +36,7 @@ const LoginUserPass = () => {
     >
       <SafeAreaView style={styles.container}>
         <View style={styles.imageLogoContainer}>
-          <Image
-            source={{}}
-            resizeMode='contain'
-          />
+
         </View>
         <View style={styles.formContainer}>
           <CustomTextInput

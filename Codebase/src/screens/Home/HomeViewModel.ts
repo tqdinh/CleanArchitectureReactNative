@@ -1,9 +1,11 @@
-import { LoginLocalDataSource } from "DATA/dataSource/login/LoginLocalDataSource"
-import { LoginRemoteDataSource } from "DATA/dataSource/login/LoginRemoteDataSource"
-import { LoginRepositoryImpl } from "DATA/repository/login/LoginRepository"
+
+import { AuthLocalDataSource } from "DATA/dataSource/auth/AuthLocalDataSource"
+import { AuthRemoteDataSource } from "DATA/dataSource/auth/AuthRemoteDataSource"
+import { AuthRepositoryImpl } from "DATA/repository/auth/AuthRepository"
 import EntityAuthentication from "DOMAIN/entities/EntityAuthentication"
 import EntityLogin from "DOMAIN/entities/EntityLogin"
-import { LoginUsecaseImpl } from "DOMAIN/usecases/login/LoginUsecase"
+import { AuthUsecaseImpl } from "DOMAIN/usecases/auth/AuthUsecase"
+
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { delay } from "redux-saga/effects"
@@ -14,9 +16,9 @@ const HomeViewModel = () => {
 
   const authUser = useSelector(selectAuth)
 
-  const remoteLogin = new LoginRemoteDataSource()
-  const localLogin = new LoginLocalDataSource()
-  const loginUsecase = new LoginUsecaseImpl(new LoginRepositoryImpl(localLogin, remoteLogin))
+  const remoteLogin = new AuthRemoteDataSource()
+  const localLogin = new AuthLocalDataSource()
+  const loginUsecase = new AuthUsecaseImpl(new AuthRepositoryImpl(localLogin, remoteLogin))
 
   useEffect(() => {
     const authUserEntity = new EntityAuthentication(authUser.access, authUser.refresh, authUser.avatar)
@@ -25,9 +27,7 @@ const HomeViewModel = () => {
       delay(1000)
       loginUsecase.ResetQuerryStatus()
     }
-    else {
-      console.log('User is not authorized, Lets remove it from the local DB')
-    }
+
 
 
   }, [authUser])
