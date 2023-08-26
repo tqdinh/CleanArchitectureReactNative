@@ -5,6 +5,9 @@ import EntityPhoto from "DOMAIN/entities/EntityPhoto"
 import { PhotoUsecaseImpl } from "DOMAIN/usecases/photo/PhotoUsecase"
 import { useEffect, useState } from "react"
 import { AppState, AppStateStatus } from "react-native"
+import GetLocation, {
+  Location,
+} from "react-native-get-location"
 import { Camera, PhotoFile } from "react-native-vision-camera"
 
 const CameraViewModel = () => {
@@ -13,6 +16,24 @@ const CameraViewModel = () => {
   const photoLocalDataSource = new PhotoLocalDataSource()
   const photoRepository = new PhotoRepositoryImpl(photoLocalDataSource)
   const photoUsecase = new PhotoUsecaseImpl(photoRepository)
+
+  const getCurrentLocation = async () => {
+    try {
+      const newLocation = await GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 30000,
+        rationale: {
+          title: "Location permission",
+          message: "The app needs the permission to request your location.",
+          buttonPositive: "Ok",
+        },
+      })
+      return newLocation
+    } catch (error) {
+      console.log({ error })
+      return null
+    }
+  }
 
   const useIsForeground = (): boolean => {
     const [isForeground, setIsForeground] = useState(true)
@@ -58,6 +79,9 @@ const CameraViewModel = () => {
       return
     }
     const photo = await cameraRef.current.takePhoto()
+
+    const currentLocation = await getCurrentLocation()
+    console.log({ currentLocation })
     saveNewPhoto(photo)
   }
 
