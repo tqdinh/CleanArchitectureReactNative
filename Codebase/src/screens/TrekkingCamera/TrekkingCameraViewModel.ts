@@ -9,6 +9,7 @@ import GetLocation, {
   Location,
 } from "react-native-get-location"
 import { Camera, PhotoFile } from "react-native-vision-camera"
+import RNFS from 'react-native-fs'
 
 const CameraViewModel = () => {
   const navigation = useNavigation()
@@ -61,11 +62,20 @@ const CameraViewModel = () => {
     return
   }
 
-  const saveNewPhoto = (photo: PhotoFile) => {
+  const movePhoto = async (photo: PhotoFile) => {
+    const pathSegments = photo.path.split('/')
+    const fileName = pathSegments[pathSegments.length - 1]
+    const newPhotoUrl = `${RNFS.DocumentDirectoryPath}/${fileName}`
+    await RNFS.moveFile(photo.path, newPhotoUrl)
+    return `file://${newPhotoUrl}`
+  }
+
+  const saveNewPhoto = async (photo: PhotoFile) => {
+    const photoUrl = await movePhoto(photo)
     const entityPhoto = new EntityPhoto(
       1, // mock checkpoint_id
-      photo.path, // photo_url
-      photo.path, // photo_name
+      photoUrl, // photo_url
+      photoUrl, // photo_name
       [0, 0], // mock coordinates
       Date.now() // Date
     )
