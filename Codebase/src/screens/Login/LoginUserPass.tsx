@@ -7,6 +7,7 @@ import {
   ImageBackground,
   SafeAreaView,
   StyleSheet,
+  Text,
   View
 } from 'react-native'
 import { useLoginUserPassViewModel } from './LoginUserPassViewModel'
@@ -89,7 +90,10 @@ const LoginUserPass = () => {
             text='Skip'
             disabled={false}
           />
+          <Text>version name :{Config.VERSION_CODE_IOS}</Text>
+          <Text>version name :{Config.VERSION_NAME_IOS}</Text>
         </View>
+
       </SafeAreaView>
     </ImageBackground>
   )
