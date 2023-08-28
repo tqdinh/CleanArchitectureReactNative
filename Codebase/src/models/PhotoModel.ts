@@ -1,4 +1,11 @@
 import { PhotoFile } from "react-native-vision-camera";
+export interface TrekkingPhoto {
+  checkpoint_id: number;
+  photo_path: string;
+  name: string;
+  coordinates: [number, number];
+  createdAt: number
+}
 
 class PhotoModel {
   // private id: number
