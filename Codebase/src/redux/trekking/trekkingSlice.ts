@@ -5,12 +5,14 @@ import { TrekkingPhoto } from "models/PhotoModel";
 import { RootState } from "redux/store";
 
 export interface TrekkingState {
+  journeyStarted: boolean
   currentTrekkingJourney: TrekkingJourney | undefined;
   currentTrekkingCheckpoint: TrekkingCheckpoint | undefined;
   currentTrekkingPhoto: TrekkingPhoto | undefined;
 }
 
 const initialState: TrekkingState = {
+  journeyStarted: false,
   currentTrekkingJourney: undefined,
   currentTrekkingCheckpoint: undefined,
   currentTrekkingPhoto: undefined,

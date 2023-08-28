@@ -7,6 +7,7 @@ import PhotoCarousel from "./components/PhotoCarousel"
 import { testingPhotos } from "./components/testingPhotos"
 import { useFocusEffect } from "@react-navigation/native"
 import { useTrekkingMapViewModel } from "./TrekkingMapViewModel"
+import { TrekkingState } from "redux/trekking/trekkingSlice"
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoidHFkaW5oaGNtdXMiLCJhIjoiY2xsNG5teDZzMDZkcDNmb2dpcnljbGpzbyJ9.FIQMCyKAxOnFiYZCZ9wsHQ"
 )
@@ -15,8 +16,11 @@ const TrekkingMap = () => {
   const [isPause, setIsPause] = useState(true)
   const [shownRecordsCarousel, setShownRecordsCarousel] = useState(false)
   const [followUserLocation, setFollowUserLocation] = useState(true)
+  // const journeyStarted = useAppSelector((state: TrekkingState) => state.journeyStarted)
+  const [journeyStarted, setJourneyStarted] = useState(false)
+ 
 
-  const { goToTrekkingCamera } = useTrekkingMapViewModel()
+  const { goToTrekkingCamera, startNewJourney, finishJourney } = useTrekkingMapViewModel()
 
   useFocusEffect(
     useCallback(() => {
@@ -69,7 +73,7 @@ const TrekkingMap = () => {
         </View>
       </View>
 
-      {shownRecordsCarousel && (
+      {journeyStarted && shownRecordsCarousel && (
         <View style={trekkingMapStyle.carouselContainer}>
           <View style={trekkingMapStyle.carousel}>
             <PhotoCarousel data={testingPhotos}></PhotoCarousel>
@@ -83,7 +87,7 @@ const TrekkingMap = () => {
         </View>
       )}
 
-      {!shownRecordsCarousel && (
+      {journeyStarted && !shownRecordsCarousel && (
         <View style={trekkingMapStyle.buttonContainer}>
           <TouchableOpacity
             onPress={() => {
@@ -116,12 +120,28 @@ const TrekkingMap = () => {
           <TouchableOpacity
             onPress={() => {
               setIsPause(!isPause)
+              setJourneyStarted(false)
+              finishJourney()
             }}
             disabled={isPause}
             style={[trekkingMapStyle.button, { opacity: isPause ? 0 : 1 }]}
           >
             <Text style={trekkingMapStyle.text}>{"Finish"}</Text>
           </TouchableOpacity>
+        </View>
+      )}
+
+      {!journeyStarted && (
+        <View style={trekkingMapStyle.buttonContainer}>
+          <TouchableOpacity
+              onPress={() => {
+                setJourneyStarted(true)
+                startNewJourney()
+              }}
+              style={[trekkingMapStyle.button]}
+            >
+              <Text style={trekkingMapStyle.text}>{"Start"}</Text>
+            </TouchableOpacity>
         </View>
       )}
     </View>

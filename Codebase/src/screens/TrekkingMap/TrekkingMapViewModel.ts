@@ -8,7 +8,15 @@ const TrekkingMapViewModel = () => {
     navigation.navigate("TrekkingCamera")
   }
 
-  return { goToTrekkingCamera }
+  const startNewJourney = () => {
+    console.log("Start New Journey!")
+  }
+
+  const finishJourney = () => {
+    console.log("Finish the journey")
+  }
+
+  return { goToTrekkingCamera, startNewJourney, finishJourney }
 }
 
 export const useTrekkingMapViewModel = TrekkingMapViewModel
