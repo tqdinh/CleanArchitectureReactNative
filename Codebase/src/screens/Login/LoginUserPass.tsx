@@ -1,6 +1,7 @@
 //import liraries
 
 import React, { useState } from 'react'
+import Config from "react-native-config";
 import {
   Image,
   ImageBackground,
@@ -26,6 +27,7 @@ const LoginUserPass = () => {
   const [password, setpassword] = useState<string>('ab1234cd')
   const [hidePassword, setHidePassword] = useState<boolean>(true)
 
+  console.log(Config.API_URL);
 
   return (
     <ImageBackground

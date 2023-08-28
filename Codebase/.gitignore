@@ -77,4 +77,6 @@ yarn.lock
 #ios
 ios/Podfile.lock
 ios/Gemma.xcodeproj/project.pbxproj
+# react-native-config codegen
+ios/tmp.xcconfig
 
