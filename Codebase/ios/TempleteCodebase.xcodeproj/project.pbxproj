@@ -48,7 +48,7 @@
 		00E356EE1AD99517003FC87E /* TempleteCodebaseTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TempleteCodebaseTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* TempleteCodebaseTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TempleteCodebaseTests.m; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* TEMPLTE DEV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TEMPLTE DEV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* STG_TEMPLATE.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = STG_TEMPLATE.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = TempleteCodebase/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = AppDelegate.mm; path = TempleteCodebase/AppDelegate.mm; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = TempleteCodebase/Images.xcassets; sourceTree = "<group>"; };
@@ -189,7 +189,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* TEMPLTE DEV.app */,
+				13B07F961A680F5B00A75B9A /* STG_TEMPLATE.app */,
 				00E356EE1AD99517003FC87E /* TempleteCodebaseTests.xctest */,
 				D7DE1D512A9C58FB0087E24E /* development.app */,
 				D7DE1D7A2A9C8A280087E24E /* staging.app */,
@@ -253,7 +253,7 @@
 			);
 			name = TempleteCodebase;
 			productName = TempleteCodebase;
-			productReference = 13B07F961A680F5B00A75B9A /* TEMPLTE DEV.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* STG_TEMPLATE.app */;
 			productType = "com.apple.product-type.application";
 		};
 		D7DE1D402A9C58FB0087E24E /* development */ = {
@@ -1118,7 +1118,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E3D4D24C66DF9E0453BD89A7 /* Pods-TempleteCodebase-development.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AFGZX5W8Z9;
@@ -1150,7 +1150,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 1518CB5911C760D54DFAB863 /* Pods-TempleteCodebase-development.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconDev;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AFGZX5W8Z9;
@@ -1234,7 +1234,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 67AFF5750F20E4FA5C643EB7 /* Pods-TempleteCodebase-production.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconPro;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AFGZX5W8Z9;
@@ -1266,7 +1266,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = D70271072BE3773C632B0C5C /* Pods-TempleteCodebase-production.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconPro;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AFGZX5W8Z9;
