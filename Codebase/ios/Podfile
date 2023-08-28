@@ -36,6 +36,9 @@ abstract_target 'TempleteCodebase' do
   target 'staging' do
   end
 
+  target 'production' do
+  end
+
   config = use_native_modules!
 
   # Flags change depending on the env values.
