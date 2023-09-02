@@ -32,7 +32,6 @@ export class LocalStorageLocalDataSource
       MMKVKeys.JOURNEY_STATUS,
       entityLocalStorage.getValue()
     )
-    console.log({entityLocalStorage})
   }
 
 }

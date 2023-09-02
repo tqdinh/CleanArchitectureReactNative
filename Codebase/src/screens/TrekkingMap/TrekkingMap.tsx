@@ -8,6 +8,7 @@ import { testingPhotos } from "./components/testingPhotos"
 import { useFocusEffect } from "@react-navigation/native"
 import { useTrekkingMapViewModel } from "./TrekkingMapViewModel"
 import { TrekkingState } from "redux/trekking/trekkingSlice"
+import { JourneyStatus } from "models/JourneyModel"
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoidHFkaW5oaGNtdXMiLCJhIjoiY2xsNG5teDZzMDZkcDNmb2dpcnljbGpzbyJ9.FIQMCyKAxOnFiYZCZ9wsHQ"
 )
@@ -18,14 +19,21 @@ const TrekkingMap = () => {
   const [followUserLocation, setFollowUserLocation] = useState(true)
   // const journeyStarted = useAppSelector((state: TrekkingState) => state.journeyStarted)
   const [journeyStarted, setJourneyStarted] = useState(false)
- 
 
-  const { goToTrekkingCamera, startNewJourney, finishJourney } = useTrekkingMapViewModel()
+  const {
+    goToTrekkingCamera,
+    startNewJourney,
+    finishJourney,
+    getSavedJourneyStatusInLocalStorage,
+  } = useTrekkingMapViewModel()
 
   useFocusEffect(
     useCallback(() => {
       requestAndroidLocationPermissions()
-    }, []),
+      setJourneyStarted(
+        getSavedJourneyStatusInLocalStorage() === JourneyStatus.STARTED
+      )
+    }, [])
   )
 
   const requestAndroidLocationPermissions = async () => {
@@ -134,14 +142,14 @@ const TrekkingMap = () => {
       {!journeyStarted && (
         <View style={trekkingMapStyle.buttonContainer}>
           <TouchableOpacity
-              onPress={() => {
-                setJourneyStarted(true)
-                startNewJourney()
-              }}
-              style={[trekkingMapStyle.button]}
-            >
-              <Text style={trekkingMapStyle.text}>{"Start"}</Text>
-            </TouchableOpacity>
+            onPress={() => {
+              setJourneyStarted(true)
+              startNewJourney()
+            }}
+            style={[trekkingMapStyle.button]}
+          >
+            <Text style={trekkingMapStyle.text}>{"Start"}</Text>
+          </TouchableOpacity>
         </View>
       )}
     </View>

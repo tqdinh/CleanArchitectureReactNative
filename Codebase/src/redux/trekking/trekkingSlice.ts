@@ -5,14 +5,12 @@ import { TrekkingPhoto } from "models/PhotoModel";
 import { RootState } from "redux/store";
 
 export interface TrekkingState {
-  journeyStarted: boolean
   currentTrekkingJourney: TrekkingJourney | undefined;
   currentTrekkingCheckpoint: TrekkingCheckpoint | undefined;
   currentTrekkingPhoto: TrekkingPhoto | undefined;
 }
 
 const initialState: TrekkingState = {
-  journeyStarted: false,
   currentTrekkingJourney: undefined,
   currentTrekkingCheckpoint: undefined,
   currentTrekkingPhoto: undefined,
@@ -27,6 +25,12 @@ const trekkingSlice = createSlice({
       action: PayloadAction<TrekkingPhoto | undefined>
     ) {
       state.currentTrekkingPhoto = action.payload;
+    },
+    updateCurrentTrekkingJourney(
+      state,
+      action: PayloadAction<TrekkingJourney | undefined>
+    ) {
+      state.currentTrekkingJourney = action.payload;
     },
     
   },
