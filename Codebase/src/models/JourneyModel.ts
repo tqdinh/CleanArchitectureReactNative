@@ -5,3 +5,10 @@ export interface TrekkingJourney {
   total_subcriber: number;
   createdAt: number;
 }
+
+// export const JourneyStatus = 'STARTED' || 'FINISHED' || 'PAUSED' || undefined
+export enum JourneyStatus {
+  STARTED = "STARTED",
+  FINISHED = "FINISHED",
+  PAUSED = "PAUSED",
+};
