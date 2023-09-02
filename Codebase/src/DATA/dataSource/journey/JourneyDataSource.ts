@@ -1,5 +1,5 @@
+import EntityJourney from "DOMAIN/entities/EntityJourney";
+
 export abstract class JourneyDataSource {
-  abstract QueryJourney(): any
-  abstract QueryCheckpoints(): any
-  abstract QueryPhotos(): any
+  abstract CreateNewJourney(entityJourney: EntityJourney): any
 }

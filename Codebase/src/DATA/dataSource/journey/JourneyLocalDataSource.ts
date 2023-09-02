@@ -1,13 +1,13 @@
+import EntityJourney from "DOMAIN/entities/EntityJourney";
 import { JourneyDataSource } from "./JourneyDataSource"
 
 export class JourneyLocalDataSource implements JourneyDataSource {
-  QueryJourney() {
-    throw new Error("Method not implemented.");
-  }
-  QueryCheckpoints() {
-    throw new Error("Method not implemented.");
-  }
-  QueryPhotos() {
-    throw new Error("Method not implemented.");
+  CreateNewJourney(entityJourney: EntityJourney) {
+    // TODO: 
+    // Create new Entity Journey
+    // Save it to Local DB
+    // Save 'Journey Started State' to Local Storage (MMKV)
+    // Save New Journey in Redux Store (No, this should be saved in DataSource layer)
+    console.log({entityJourney})
   }
 }

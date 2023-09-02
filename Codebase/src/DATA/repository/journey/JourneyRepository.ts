@@ -1,22 +1,19 @@
-import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint"
+import { JourneyLocalDataSource } from "DATA/dataSource/journey/JourneyLocalDataSource"
 import EntityJourney from "DOMAIN/entities/EntityJourney"
-import EntityPhoto from "DOMAIN/entities/EntityPhoto"
 
 export interface JourneyRepository {
-  Journey(entityJourney: EntityJourney): any
-  Checkpoint(entityCheckpoint: EntityCheckpoint): any
-  Photo(entityPhoto: EntityPhoto): any
+  CreateNewJourney(entityJourney: EntityJourney): any
 }
 
 export class JourneyRepositoryImpl implements JourneyRepository {
-  Journey(entityJourney: EntityJourney) {
-    throw new Error("Method not implemented.")
+  private localDataSource: JourneyLocalDataSource
+  constructor(_localDataSource: JourneyLocalDataSource) {
+    this.localDataSource = _localDataSource
   }
-  Checkpoint(entityCheckpoint: EntityCheckpoint) {
-    throw new Error("Method not implemented.")
+
+  CreateNewJourney(entityJourney: EntityJourney) {
+    this.localDataSource.CreateNewJourney(entityJourney)
   }
-  Photo(entityPhoto: EntityPhoto) {
-    throw new Error("Method not implemented.")
-  }
+  
 
 }

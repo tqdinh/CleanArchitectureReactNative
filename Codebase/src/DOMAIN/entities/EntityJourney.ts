@@ -2,13 +2,13 @@ export default class EntityJourney {
   private title: string
   private image_header: string
   private total_subcriber: string
-  private date_created: Date
+  private date_created: number
 
   constructor(
     _title: string,
     _image_header: string,
     _total_subcriber: string,
-    _date_created: Date
+    _date_created: number
   ) {
     this.title = _title
     this.image_header = _image_header

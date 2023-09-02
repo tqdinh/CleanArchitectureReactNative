@@ -1,26 +1,19 @@
 import EntityJourney from "DOMAIN/entities/EntityJourney"
 import CommonUsecase from "../CommonUsecase"
-import EntityPhoto from "DOMAIN/entities/EntityPhoto"
-import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint"
+import { JourneyRepository } from "DATA/repository/journey/JourneyRepository"
 
-export interface JourneyUsecase extends CommonUsecase {
-  Journey(entityJourney: EntityJourney): any
-  Checkpoint(entityCheckpoint: EntityCheckpoint): any
-  Photo(entityPhoto: EntityPhoto): any
+export interface JourneyUsecase {
+  CreateNewJourney(entityJourney: EntityJourney): any
 }
 
 export class JourneyUsecaseImpl implements JourneyUsecase {
-  Journey(entityJourney: EntityJourney) {
-    throw new Error("Method not implemented.")
+  private repository: JourneyRepository
+  constructor(_repository: JourneyRepository) {
+    this.repository = _repository
   }
-  Checkpoint(entityCheckpoint: EntityCheckpoint) {
-    throw new Error("Method not implemented.")
-  }
-  Photo(entityPhoto: EntityPhoto) {
-    throw new Error("Method not implemented.")
-  }
-  ResetQuerryStatus() {
-    throw new Error("Method not implemented.")
+  
+  CreateNewJourney(entityJourney: EntityJourney) {
+    this.repository.CreateNewJourney(entityJourney)
   }
 
 }
