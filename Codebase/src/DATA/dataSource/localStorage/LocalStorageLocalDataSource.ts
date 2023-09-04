@@ -1,37 +1,34 @@
-import EntityLocalStorage from "DOMAIN/entities/EntityLocalStorage"
-import { LocalStorageDataSource } from "./LocalStorageDataSource"
-import { MMKV } from "react-native-mmkv"
-import { MMKVKeys } from "models/LocalStorageModel"
+import EntityLocalStorage from "DOMAIN/entities/EntityLocalStorage";
+import { LocalStorageDataSource } from "./LocalStorageDataSource";
+import MMKVStorage from "mmkv/MMKVStorage";
+import { JourneyStatus } from "models/JourneyModel";
+import { MMKVKeys } from "mmkv/MMKVKeys";
 
 interface LocalStorageLocalInterface {
-  SetCurrentJourneyStatus(entityLocalStorage: EntityLocalStorage): any
-  GetCurrentJourneyStatus(): EntityLocalStorage
+  SetCurrentJourneyStatus(entityLocalStorage: EntityLocalStorage): any;
+  GetCurrentJourneyStatus(): EntityLocalStorage;
 }
 
 export class LocalStorageLocalDataSource
   extends LocalStorageDataSource
   implements LocalStorageLocalInterface
 {
-  private localStorage: MMKV
-  // constructor(_localStorage: MMKV) {
-  //   super()
-  //   this.localStorage = _localStorage
-  // }
-  constructor() {
-    super()
-    this.localStorage = new MMKV()
+  GetCurrentJourneyStatus(): EntityLocalStorage {
+    let currentJourneyStatus = MMKVStorage.getStringValueFromKey(
+      MMKVKeys.JOURNEY_STATUS
+    );
+
+    if (currentJourneyStatus === undefined) {
+      currentJourneyStatus = JourneyStatus.UNDEFINED
+    }
+
+    return new EntityLocalStorage(currentJourneyStatus);
   }
 
-  GetCurrentJourneyStatus(): EntityLocalStorage {
-    const currentJourneyStatus = this.localStorage.getString(MMKVKeys.JOURNEY_STATUS)
-    return new EntityLocalStorage(currentJourneyStatus)
-  }
-  
   SetCurrentJourneyStatus(entityLocalStorage: EntityLocalStorage) {
-    this.localStorage.set(
+    MMKVStorage.saveStringValue(
       MMKVKeys.JOURNEY_STATUS,
       entityLocalStorage.getValue()
-    )
+    );
   }
-
 }
