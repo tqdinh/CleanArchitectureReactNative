@@ -84,7 +84,7 @@ class CleanGen:
         self.entityNameNormed = self.entityName[0].upper()+self.entityName[1:]
 
     def getEntityName(self):
-        self.pathEntity = './src/domain/entities/'
+        self.pathEntity = self.ENTITY
         self.entity = ("{0}Entity").format(self.entityNameNormed)
 
     def getEntityFileName(self):
@@ -95,7 +95,7 @@ class CleanGen:
             print("The Entity is None, empty, or existed, no need to create")
 
     def getAppModelName(self):
-        self.pathAppModel = './src/data/appModels/'
+        self.pathAppModel = self.APP_MODLE  # './src/data/appModels/'
         self.appModel = ("{0}Model").format(self.entity)
 
     def getAppModelFileName(self):
@@ -144,8 +144,8 @@ class CleanGen:
         print(self.f_entity)
 
     def getDomain(self):
-        self.pathDomain = './src/domain/usecases/{0}'.format(
-            self.featureNameNormed)
+        self.pathDomain = '{0}{1}'.format(self.USECASE,
+                                          self.featureNameNormed)
 
         self.getEntityName()
         self.getEntityFileName()
@@ -153,19 +153,19 @@ class CleanGen:
         self.getUsecaseFileName()
 
     def getRepo(self):
-        self.pathRepository = './src/data/repository/{0}'.format(
-            self.featureNameNormed)
+        self.pathRepository = '{0}{1}'.format(self.REPOSITORY,
+                                              self.featureNameNormed)
 
         self.getRepoName()
         self.getRepoFileName()
 
     def getDataSource(self):
 
-        self.pathDataSource = './src/data/dataSource/{0}'.format(
-            self.featureNameNormed)
+        self.pathDataSource = '{0}{1}'.format(
+            self.DATASOURCE, self.featureNameNormed)
 
-        self.pathAppModel = './src/data/appModels/{0}'.format(
-            self.appModel)
+        self.pathAppModel = '{0}{1}'.format(self.APP_MODLE,
+                                            self.appModel)
 
         self.getAppModelName()
         self.getAppModelFileName()
@@ -253,18 +253,23 @@ class CleanGen:
             self.remoteDataSource, self.dataSource, self.remoteSpecificInterface, self.DistinguishedRemoteDatasourceComment, self.remoteDataSourceTask)
 
     def GenFolderStructureTree(self):
+        print("\n")
         treeEntity = GenTree(self.ENTITY)
         treeEntity.gentree()
 
+        print("\n")
         treeUsecase = GenTree(self.USECASE)
         treeUsecase.gentree()
 
+        print("\n")
         treeRepository = GenTree(self.REPOSITORY)
         treeRepository.gentree()
 
+        print("\n")
         treAppModel = GenTree(self.APP_MODLE)
         treAppModel.gentree()
 
+        print("\n")
         treeDataSource = GenTree(self.DATASOURCE)
         treeDataSource.gentree()
 
