@@ -26,6 +26,7 @@ class GenTree:
                 yield from self.tree(path, prefix=prefix+extension)
 
     def gentree(self):
+        print(os.path.basename(self.path.rstrip('/')))
         if (None != self.path):
             for line in self.tree(Path(os.path.abspath(self.path))):
                 print(line)
@@ -145,8 +146,6 @@ class CleanGen:
     def getDomain(self):
         self.pathDomain = './src/domain/usecases/{0}'.format(
             self.featureNameNormed)
-        if not os.path.exists(self.pathDomain):   # create folders if not exists
-            Path(self.pathDomain).mkdir(parents=True, exist_ok=True)
 
         self.getEntityName()
         self.getEntityFileName()
@@ -157,9 +156,6 @@ class CleanGen:
         self.pathRepository = './src/data/repository/{0}'.format(
             self.featureNameNormed)
 
-        if not os.path.exists(self.pathRepository):   # create folders if not exists
-            Path(self.pathRepository).mkdir(parents=True, exist_ok=True)
-
         self.getRepoName()
         self.getRepoFileName()
 
@@ -167,14 +163,9 @@ class CleanGen:
 
         self.pathDataSource = './src/data/dataSource/{0}'.format(
             self.featureNameNormed)
-        if not os.path.exists(self.pathDataSource):   # create folders if not exists
-            Path(self.pathDataSource).mkdir(parents=True, exist_ok=True)
 
         self.pathAppModel = './src/data/appModels/{0}'.format(
             self.appModel)
-
-        if not os.path.exists(self.pathAppModel):   # create folders if not exists
-            Path(self.pathAppModel).mkdir(parents=True, exist_ok=True)
 
         self.getAppModelName()
         self.getAppModelFileName()
@@ -261,6 +252,22 @@ class CleanGen:
                                         "\n}}").format(
             self.remoteDataSource, self.dataSource, self.remoteSpecificInterface, self.DistinguishedRemoteDatasourceComment, self.remoteDataSourceTask)
 
+    def GenFolderStructureTree(self):
+        treeEntity = GenTree(self.ENTITY)
+        treeEntity.gentree()
+
+        treeUsecase = GenTree(self.USECASE)
+        treeUsecase.gentree()
+
+        treeRepository = GenTree(self.REPOSITORY)
+        treeRepository.gentree()
+
+        treAppModel = GenTree(self.APP_MODLE)
+        treAppModel.gentree()
+
+        treeDataSource = GenTree(self.DATASOURCE)
+        treeDataSource.gentree()
+
 
 class CleanGenRun(CleanGen):
     def __init__(self):
@@ -268,6 +275,8 @@ class CleanGenRun(CleanGen):
         self.getDomain()
         self.getRepo()
         self.getDataSource()
+
+        self.genfolders()
 
         self.getEntityContent()
         self.getUsecaseContent()
@@ -336,6 +345,19 @@ class CleanGenRun(CleanGen):
     def generateAppModelContent(self):
         self.writeFile(self.f_appModel, self.contentAppModel)
 
+    def genfolders(self):
+        if not os.path.exists(self.pathDomain):   # create folders if not exists
+            Path(self.pathDomain).mkdir(parents=True, exist_ok=True)
+
+        if not os.path.exists(self.pathRepository):   # create folders if not exists
+            Path(self.pathRepository).mkdir(parents=True, exist_ok=True)
+
+        if not os.path.exists(self.pathDataSource):   # create folders if not exists
+            Path(self.pathDataSource).mkdir(parents=True, exist_ok=True)
+
+        if not os.path.exists(self.pathAppModel):   # create folders if not exists
+            Path(self.pathAppModel).mkdir(parents=True, exist_ok=True)
+
     def generateFiles(self):
         self.generateEntityFiles()
         self.generateUsecaseFiles()
@@ -343,7 +365,7 @@ class CleanGenRun(CleanGen):
         self.generateDataSourceFiles()
         self.generateAppModelFiles()
 
-    def genContents(self):
+    def generateContents(self):
         self.generateEntityContent()
         self.generateUsecaseContent()
         self.generateRepositoryContent()
@@ -415,12 +437,11 @@ class CleanGenDebug(CleanGen):
         self.generateDataSourceContent()
         self.generateAppModelContent()
 
-    def GenFolderStructureTree(self):
-        tree = GenTree(self.USECASE)
-        tree.gentree()
 
-
-k = CleanGenDebug()
+# k = CleanGenDebug()
+k = CleanGenRun()
+k.generateFiles()
+k.generateContents()
 k.GenFolderStructureTree()
 # k.generateFiles()
 # k.genContents()
