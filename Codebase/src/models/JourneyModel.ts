@@ -11,4 +11,5 @@ export enum JourneyStatus {
   STARTED = "STARTED",
   FINISHED = "FINISHED",
   PAUSED = "PAUSED",
+  UNDEFINED = "UNDEFINED",
 };

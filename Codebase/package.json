@@ -15,9 +15,12 @@
     "android:prod-release": "react-native run-android --variant=productionrelease"
   },
   "dependencies": {
+    "@babel/plugin-proposal-decorators": "^7.22.10",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
+    "@realm/babel-plugin": "^0.1.1",
+    "@realm/react": "^0.6.0",
     "@redux-saga/core": "^1.2.3",
     "@reduxjs/toolkit": "^1.9.5",
     "@rnmapbox/maps": "^10.0.11",
@@ -37,6 +40,7 @@
     "react-native-vector-icons": "^10.0.0",
     "react-native-vision-camera": "^2.15.5",
     "react-redux": "^8.1.2",
+    "realm": "^12.1.0",
     "redux-saga": "^1.2.3"
   },
   "devDependencies": {

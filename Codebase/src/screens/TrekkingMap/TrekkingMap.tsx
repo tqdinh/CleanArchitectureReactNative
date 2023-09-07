@@ -2,16 +2,17 @@ import { Text, TouchableOpacity, View } from "react-native"
 import React, { useCallback, useState } from "react"
 import MapboxGL, { UserLocationRenderMode } from "@rnmapbox/maps"
 import { trekkingMapStyle } from "./style"
-import { MaterialCommunityIcons, MaterialIcons } from "themes/appIcon"
 import PhotoCarousel from "./components/PhotoCarousel"
 import { testingPhotos } from "./components/testingPhotos"
 import { useFocusEffect } from "@react-navigation/native"
 import { useTrekkingMapViewModel } from "./TrekkingMapViewModel"
-import { TrekkingState } from "redux/trekking/trekkingSlice"
-import { JourneyStatus } from "models/JourneyModel"
+import { JourneyStatus } from "../../models/JourneyModel"
+import { MaterialCommunityIcons, MaterialIcons } from "themes/appIcon"
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoidHFkaW5oaGNtdXMiLCJhIjoiY2xsNG5teDZzMDZkcDNmb2dpcnljbGpzbyJ9.FIQMCyKAxOnFiYZCZ9wsHQ"
 )
+
+// TODO: useHook https://github.com/realm/FindOurDevices/blob/main/app/hooks/useLocation.js
 
 const TrekkingMap = () => {
   const [isPause, setIsPause] = useState(true)
