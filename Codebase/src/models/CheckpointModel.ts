@@ -1,8 +1,10 @@
-export interface TrekkingCheckpoint {
-  checkpoint_id: number;
-  journey_id: number;
-  title: string;
-  description: string;
-  journey_time: number;
-  createdAt: number;
+interface TrekkingCheckpoint {
+  _id: Realm.BSON.ObjectId;
+  journey_id?: Realm.BSON.ObjectId;
+  description?: string;
+  starting_time?: Date;
+  createdAt?: Date;
+  photoIds?: string[]
 }
+
+export type CheckpointModel = TrekkingCheckpoint | undefined

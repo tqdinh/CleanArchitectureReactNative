@@ -10,6 +10,11 @@ import GetLocation, {
 } from "react-native-get-location"
 import { Camera, PhotoFile } from "react-native-vision-camera"
 import RNFS from 'react-native-fs'
+import { CheckpointLocalDataSource } from "DATA/dataSource/checkpoint/CheckpointLocalDataSource"
+import { CheckpointRepositoryImpl } from "DATA/repository/checkpoint/CheckpointRepository"
+import { CheckpointUsecaseImpl } from "DOMAIN/usecases/checkpoint/CheckpointUsecase"
+import { useTrekkingMapViewModel } from "screens/TrekkingMap/TrekkingMapViewModel"
+import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint"
 
 const CameraViewModel = () => {
   const navigation = useNavigation()
@@ -17,6 +22,14 @@ const CameraViewModel = () => {
   const photoLocalDataSource = new PhotoLocalDataSource()
   const photoRepository = new PhotoRepositoryImpl(photoLocalDataSource)
   const photoUsecase = new PhotoUsecaseImpl(photoRepository)
+
+  const checkpointLocalDataSource = new CheckpointLocalDataSource()
+  const checkpointRepository = new CheckpointRepositoryImpl(checkpointLocalDataSource)
+  const checkpointUsecase = new CheckpointUsecaseImpl(checkpointRepository)
+
+  const {
+    journeyUsecase
+  } = useTrekkingMapViewModel()
 
   const getCurrentLocation = async () => {
     try {
@@ -99,6 +112,11 @@ const CameraViewModel = () => {
     if (navigation.canGoBack()) {
       navigation.goBack()
     }
+  }
+
+  const createNewCheckpointInCurrentJourney = () => {
+    const newEntityCheckpoint = new EntityCheckpoint()
+    checkpointUsecase.CreateNewCheckpointInCurrentJourney(newEntityCheckpoint)
   }
 
   return {

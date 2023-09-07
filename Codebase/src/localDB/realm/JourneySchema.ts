@@ -10,7 +10,7 @@ export class JourneySchema extends Realm.Object<JourneySchema> {
   createdAt?: Date = new Date();
   status?: JourneyStatus;
 
-  // checkpoints?: Realm.List<CheckpointSchema>;
+  checkpoints!: Realm.List<CheckpointSchema>;
 
   static schema = {
     name: "Journey",
@@ -21,7 +21,7 @@ export class JourneySchema extends Realm.Object<JourneySchema> {
       total_subcriber: "int?",
       createdAt: "date?",
       status: "string?",
-      // checkpoints: 'Checkpoint?[]'
+      checkpoints: 'Checkpoint[]'
     },
     primaryKey: "_id",
   };

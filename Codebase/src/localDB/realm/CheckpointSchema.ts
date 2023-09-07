@@ -3,22 +3,20 @@ import { PhotoSchema } from "./PhotoSchema";
 
 export class CheckpointSchema extends Realm.Object<CheckpointSchema> {
   _id!: Realm.BSON.ObjectId;
-  title!: string;
   description?: string;
-  journey_time?: number;
+  starting_time?: Date;
   createdAt?: Date = new Date();
 
-  // photos?: Realm.List<PhotoSchema>;
+  photos!: Realm.List<PhotoSchema>;
 
   static schema = {
     name: "Checkpoint",
     properties: {
       _id: 'objectId',
-      title: "string",
       description: "string?",
-      journey_time: "int?",
+      starting_time: "date?",
       createdAt: "date?",
-      // photos: 'Photo?[]'
+      photos: 'Photo[]'
     },
     primaryKey: "_id",
   };

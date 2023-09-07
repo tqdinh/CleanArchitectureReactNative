@@ -30,9 +30,6 @@ const TrekkingMapViewModel = () => {
     console.log("Start New Journey!")
     const entityJourney = new EntityJourney(
       "New Testing Journey",
-      "",
-      100,
-      Date.now()
     )
     journeyUsecase.CreateNewJourney(entityJourney)
   }
@@ -53,6 +50,7 @@ const TrekkingMapViewModel = () => {
   }
 
   return {
+    journeyUsecase,
     goToTrekkingCamera,
     startNewJourney,
     finishJourney,

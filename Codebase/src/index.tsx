@@ -10,7 +10,7 @@ const AppContainer = () => {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <RealmProvider schema={schemas}>
+        <RealmProvider deleteRealmIfMigrationNeeded>
           <AppNavigator />
         </RealmProvider>
       </SafeAreaProvider>

@@ -1,19 +1,19 @@
 export default class EntityJourney {
-  private title: string
-  private image_header: string
-  private total_subcriber: number
-  private date_created: number
+  private title?: string
+  private image_header?: string
+  private total_subcriber?: number
+  private createdAt?: Date
 
   constructor(
-    _title: string,
-    _image_header: string,
-    _total_subcriber: number,
-    _date_created: number
+    _title?: string,
+    _image_header?: string,
+    _total_subcriber?: number,
+    _createdAt?: Date
   ) {
     this.title = _title
     this.image_header = _image_header
     this.total_subcriber = _total_subcriber
-    this.date_created = _date_created
+    this.createdAt = _createdAt
   }
 
   getTitle = () => {
@@ -29,6 +29,6 @@ export default class EntityJourney {
   }
 
   getDateCreated = () => {
-    return this.date_created
+    return this.createdAt
   }
 }

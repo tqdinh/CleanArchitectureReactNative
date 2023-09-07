@@ -1,6 +1,6 @@
 import EntityJourney from "DOMAIN/entities/EntityJourney";
 import { JourneyDataSource } from "./JourneyDataSource";
-import { JourneyStatus, TrekkingJourney } from "models/JourneyModel";
+import { JourneyModel, JourneyStatus } from "models/JourneyModel";
 import { LocalStorageLocalDataSource } from "../localStorage/LocalStorageLocalDataSource";
 import { LocalStorageUsecaseImpl } from "DOMAIN/usecases/localStorage/LocalStorageUsecase";
 import { LocalStorageRepositoryImpl } from "DATA/repository/localStorage/LocalStorageRepository";
@@ -9,59 +9,90 @@ import { useDispatch } from "react-redux";
 import { trekkingActions } from "redux/trekking/trekkingSlice";
 import { JourneySchema } from "localDB/realm/JourneySchema";
 import { useRealm } from "@realm/react";
+import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint";
+import EntityPhoto from "DOMAIN/entities/EntityPhoto";
+import MMKVStorage from "mmkv/MMKVStorage";
 
 export class JourneyLocalDataSource implements JourneyDataSource {
-  private localStorageLocalDataSource: LocalStorageLocalDataSource;
-  private localStorageUsecase: LocalStorageUsecaseImpl;
   private dispatch = useDispatch();
   private realm = useRealm();
 
-  constructor() {
-    this.localStorageLocalDataSource = new LocalStorageLocalDataSource();
-    this.localStorageUsecase = new LocalStorageUsecaseImpl(
-      new LocalStorageRepositoryImpl(this.localStorageLocalDataSource)
-    );
+  private setCurrentJourneyInLocalStorage(journey: JourneyModel) {
+    MMKVStorage.saveCurrentJourney(journey);
   }
 
-  private setJourneyStatusToLocalStorage(status: JourneyStatus) {
-    const entityLocalStorage = new EntityLocalStorage(status);
-    this.localStorageUsecase.SetCurrentJourneyStatus(entityLocalStorage);
+  private getCurrentJourneyInLocalStorage(): JourneyModel {
+    return MMKVStorage.getCurrentJourney();
   }
 
-  private createNewJourneyInLocalDB() {
+  private deleteCurrentJourneyInLocalStorage() {
+    MMKVStorage.saveCurrentJourney(undefined);
+  }
+
+  private createNewJourneyInLocalDB(
+    entityJourney: EntityJourney
+  ): JourneyModel {
+    const id = new Realm.BSON.ObjectId();
+    const journeySchemaName = "Journey";
+    const createdAt = new Date();
+
+    // Write to Database
     this.realm.write(() => {
-      const id = new Realm.BSON.ObjectId()
-      this.realm.create('Journey', {
+      this.realm.create(journeySchemaName, {
         _id: id,
-        title: `Custom Journey ${id}`,
+        title: entityJourney.getTitle(),
+        image_header: entityJourney.getImageHeader(),
+        total_subcriber: entityJourney.getTotalSubcriber(),
+        createdAt: createdAt,
+        status: JourneyStatus.STARTED,
+        checkpoints: [],
       });
     });
+
+    // Create JourneyModel to return
+    const newJourney: JourneyModel = {
+      _id: id,
+      title: entityJourney.getTitle() ?? "No title",
+      image_header: entityJourney.getImageHeader() ?? "",
+      total_subcriber: entityJourney.getTotalSubcriber() ?? 0,
+      createdAt: createdAt,
+      status: JourneyStatus.STARTED,
+      checkpointIds: [],
+    };
+
+    return newJourney;
   }
 
   CreateNewJourney(entityJourney: EntityJourney) {
-    // TODO:
     // Save it to Local DB
-    this.QueryAllJourneysInLocalDB();
-
+    const newJourney: JourneyModel =
+      this.createNewJourneyInLocalDB(entityJourney);
     // Save 'Journey Started State' to Local Storage (MMKV)
-    this.setJourneyStatusToLocalStorage(JourneyStatus.STARTED);
-    // Save New Journey in Redux Store (No, this should be saved in DataSource layer)
-    const journey: TrekkingJourney = {
-      title: entityJourney.getTitle(),
-      image_header: entityJourney.getImageHeader(),
-      total_subcriber: entityJourney.getTotalSubcriber(),
-      createdAt: entityJourney.getDateCreated(),
-      status: JourneyStatus.STARTED,
-    };
-    this.dispatch(trekkingActions.updateCurrentTrekkingJourney(journey));
-    
-    // this.QueryAllJourneysInLocalDB()  // debug, need to be deleted
+    this.setCurrentJourneyInLocalStorage(newJourney);
+    // Save New Journey in Redux Store
+    this.dispatch(trekkingActions.updateCurrentTrekkingJourney(newJourney));
   }
 
-  QueryAllJourneysInLocalDB() {
+  QueryAllJourneysInLocalDB(): EntityJourney[] {
     // TODO: get all journey saved in LocalDB
-    if (!this.realm) return
-    const journeys = this.realm.objects('Journey')
-    console.log(JSON.stringify(journeys))
+    // if (!this.realm) return
+    // const journeys = this.realm.objects('Journey')
+    // console.log(JSON.stringify(journeys))
+
+    // return [new EntityJourney({})]
+    return [];
+  }
+
+  GetCurrentJourney(): EntityJourney {
+    // Get From Local Storage
+    const currentJourney = this.getCurrentJourneyInLocalStorage();
+    // convert from JourneyModel To EntityJourney
+    const entityJourney = new EntityJourney(
+      currentJourney?.title,
+      currentJourney?.image_header,
+      currentJourney?.total_subcriber,
+      currentJourney?.createdAt
+    );
+    return entityJourney;
   }
 }
