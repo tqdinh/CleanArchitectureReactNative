@@ -1,35 +1,33 @@
-import { useNavigation } from "@react-navigation/native"
-import { PhotoLocalDataSource } from "DATA/dataSource/photo/PhotoLocalDataSource"
-import { PhotoRepositoryImpl } from "DATA/repository/photo/photoRepository"
-import EntityPhoto from "DOMAIN/entities/EntityPhoto"
-import { PhotoUsecaseImpl } from "DOMAIN/usecases/photo/PhotoUsecase"
-import { useEffect, useState } from "react"
-import { AppState, AppStateStatus } from "react-native"
-import GetLocation, {
-  Location,
-} from "react-native-get-location"
-import { Camera, PhotoFile } from "react-native-vision-camera"
-import RNFS from 'react-native-fs'
-import { CheckpointLocalDataSource } from "DATA/dataSource/checkpoint/CheckpointLocalDataSource"
-import { CheckpointRepositoryImpl } from "DATA/repository/checkpoint/CheckpointRepository"
-import { CheckpointUsecaseImpl } from "DOMAIN/usecases/checkpoint/CheckpointUsecase"
-import { useTrekkingMapViewModel } from "screens/TrekkingMap/TrekkingMapViewModel"
-import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint"
+import { useNavigation } from "@react-navigation/native";
+import { PhotoLocalDataSource } from "DATA/dataSource/photo/PhotoLocalDataSource";
+import { PhotoRepositoryImpl } from "DATA/repository/photo/photoRepository";
+import EntityPhoto from "DOMAIN/entities/EntityPhoto";
+import { PhotoUsecaseImpl } from "DOMAIN/usecases/photo/PhotoUsecase";
+import { useEffect, useState } from "react";
+import { AppState, AppStateStatus } from "react-native";
+import GetLocation, { Location } from "react-native-get-location";
+import { Camera, PhotoFile } from "react-native-vision-camera";
+import RNFS from "react-native-fs";
+import { CheckpointLocalDataSource } from "DATA/dataSource/checkpoint/CheckpointLocalDataSource";
+import { CheckpointRepositoryImpl } from "DATA/repository/checkpoint/CheckpointRepository";
+import { CheckpointUsecaseImpl } from "DOMAIN/usecases/checkpoint/CheckpointUsecase";
+import { useTrekkingMapViewModel } from "screens/TrekkingMap/TrekkingMapViewModel";
+import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint";
 
 const CameraViewModel = () => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
-  const photoLocalDataSource = new PhotoLocalDataSource()
-  const photoRepository = new PhotoRepositoryImpl(photoLocalDataSource)
-  const photoUsecase = new PhotoUsecaseImpl(photoRepository)
+  const photoLocalDataSource = new PhotoLocalDataSource();
+  const photoRepository = new PhotoRepositoryImpl(photoLocalDataSource);
+  const photoUsecase = new PhotoUsecaseImpl(photoRepository);
 
-  const checkpointLocalDataSource = new CheckpointLocalDataSource()
-  const checkpointRepository = new CheckpointRepositoryImpl(checkpointLocalDataSource)
-  const checkpointUsecase = new CheckpointUsecaseImpl(checkpointRepository)
+  const checkpointLocalDataSource = new CheckpointLocalDataSource();
+  const checkpointRepository = new CheckpointRepositoryImpl(
+    checkpointLocalDataSource
+  );
+  const checkpointUsecase = new CheckpointUsecaseImpl(checkpointRepository);
 
-  const {
-    journeyUsecase
-  } = useTrekkingMapViewModel()
+  const { journeyUsecase } = useTrekkingMapViewModel();
 
   const getCurrentLocation = async () => {
     try {
@@ -41,89 +39,88 @@ const CameraViewModel = () => {
           message: "The app needs the permission to request your location.",
           buttonPositive: "Ok",
         },
-      })
-      return newLocation
+      });
+      return newLocation;
     } catch (error) {
-      console.log({ error })
-      return null
+      console.log({ error });
+      return null;
     }
-  }
+  };
 
   const useIsForeground = (): boolean => {
-    const [isForeground, setIsForeground] = useState(true)
+    const [isForeground, setIsForeground] = useState(true);
     useEffect(() => {
       const onChange = (state: AppStateStatus): void => {
-        setIsForeground(state === "active")
-      }
-      const listener = AppState.addEventListener("change", onChange)
-      return () => listener.remove()
-    }, [setIsForeground])
-    return isForeground
-  }
+        setIsForeground(state === "active");
+      };
+      const listener = AppState.addEventListener("change", onChange);
+      return () => listener.remove();
+    }, [setIsForeground]);
+    return isForeground;
+  };
 
   const requestCameraPermissions = async () => {
-    const cameraPermission = await Camera.requestCameraPermission()
+    const cameraPermission = await Camera.requestCameraPermission();
     if (cameraPermission === "denied") {
-      console.log("Camera permission is denied!")
-      return
+      console.log("Camera permission is denied!");
+      return;
     }
-    const microPermission = await Camera.requestMicrophonePermission()
+    const microPermission = await Camera.requestMicrophonePermission();
     if (microPermission === "denied") {
-      console.log("Micro permission is denied!")
-      return
+      console.log("Micro permission is denied!");
+      return;
     }
-    return
-  }
+    return;
+  };
 
   const movePhoto = async (photo: PhotoFile) => {
-    const pathSegments = photo.path.split('/')
-    const fileName = pathSegments[pathSegments.length - 1]
-    const newPhotoUrl = `${RNFS.DocumentDirectoryPath}/${fileName}`
-    await RNFS.moveFile(photo.path, newPhotoUrl)
-    return `file://${newPhotoUrl}`
-  }
-
-  const saveNewPhoto = async (photo: PhotoFile) => {
-    const photoUrl = await movePhoto(photo)
-    const entityPhoto = new EntityPhoto(
-      1, // mock checkpoint_id
-      photoUrl, // photo_url
-      photoUrl, // photo_name
-      [0, 0], // mock coordinates
-      Date.now() // Date
-    )
-
-    photoUsecase.saveNewPhoto(entityPhoto)
-  }
+    const pathSegments = photo.path.split("/");
+    const fileName = pathSegments[pathSegments.length - 1];
+    const newPhotoUrl = `${RNFS.DocumentDirectoryPath}/${fileName}`;
+    await RNFS.moveFile(photo.path, newPhotoUrl);
+    return `file://${newPhotoUrl}`;
+  };
 
   const takePhoto = async (cameraRef: React.RefObject<Camera>) => {
     if (cameraRef.current === null) {
-      console.log("cameraRef is null!")
-      return
+      console.log("cameraRef is null!");
+      return;
     }
-    const photo = await cameraRef.current.takePhoto()
+    const photo = await cameraRef.current.takePhoto();
+    const currentLocation = await getCurrentLocation();
+    const photoPath = await movePhoto(photo);
 
-    const currentLocation = await getCurrentLocation()
-    console.log({ currentLocation })
-    saveNewPhoto(photo)
-  }
+    CreateNewCheckpointWithPhotoInCurrentJourney(photoPath, currentLocation);
+  };
 
   const goBackToPreviousScreen = () => {
     if (navigation.canGoBack()) {
-      navigation.goBack()
+      navigation.goBack();
     }
-  }
+  };
 
-  const createNewCheckpointInCurrentJourney = () => {
-    const newEntityCheckpoint = new EntityCheckpoint()
-    checkpointUsecase.CreateNewCheckpointInCurrentJourney(newEntityCheckpoint)
-  }
+  const CreateNewCheckpointWithPhotoInCurrentJourney = (
+    photoPath: string,
+    location: Location | null
+  ) => {
+    const currentJourney = journeyUsecase.GetCurrentJourney();
+    if (currentJourney === undefined) {
+      throw new Error("Error, Journey is undefined!");
+    }
+    const newEntityCheckpoint = new EntityCheckpoint();
+    const newEntityPhoto = new EntityPhoto(photoPath);
+    checkpointUsecase.CreateNewCheckpointWithPhotoInCurrentJourney(
+      newEntityCheckpoint,
+      newEntityPhoto,
+      currentJourney
+    );
+  };
 
   return {
     takePhoto,
     requestCameraPermissions,
     useIsForeground,
     goBackToPreviousScreen,
-  }
-}
-export const useCameraViewModel = CameraViewModel
+  };
+};
+export const useCameraViewModel = CameraViewModel;

@@ -1,21 +1,33 @@
 export default class EntityPhoto {
-  private checkpoint_id: number
-  private photo_url: string
-  private name: string
-  private coordinates: [number, number]
-  private date_created: number
+  private photo_path: string;
+  private checkpoint_id?: number;
+  private name?: string;
+  private createdAt?: Date;
+  private description?: string;
 
   constructor(
-    _checkpoint_id: number,
-    _photo_url: string,
-    _name: string,
-    _coordinates: [number, number],
-    _date_created: number
+    _photo_path: string,
+    _checkpoint_id?: number,
+    _name?: string,
+    _description?: string,
+    _createdAt?: Date
   ) {
-    this.checkpoint_id = _checkpoint_id
-    this.photo_url = _photo_url
-    this.name = _name
-    this.coordinates = _coordinates
-    this.date_created = _date_created
+    this.checkpoint_id = _checkpoint_id;
+    this.photo_path = _photo_path;
+    this.name = _name;
+    this.createdAt = _createdAt;
+    this.description = _description;
+  }
+
+  public getPhotoPath() {
+    return this.photo_path;
+  }
+  public getName() {
+    if (this.name === "" || this.name === undefined) return "Photo Name";
+    return this.name;
+  }
+  public getDescription() {
+    if (this.description === undefined) return "Photo Description";
+    return this.description;
   }
 }

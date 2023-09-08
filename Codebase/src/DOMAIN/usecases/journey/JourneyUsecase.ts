@@ -6,7 +6,7 @@ import EntityPhoto from "DOMAIN/entities/EntityPhoto"
 
 export interface JourneyUsecase {
   CreateNewJourney(entityJourney: EntityJourney): any
-  GetCurrentJourney(): EntityJourney
+  GetCurrentJourney(): EntityJourney | undefined
 }
 
 export class JourneyUsecaseImpl implements JourneyUsecase {
@@ -19,7 +19,7 @@ export class JourneyUsecaseImpl implements JourneyUsecase {
     this.repository.CreateNewJourney(entityJourney)
   }
 
-  GetCurrentJourney(): EntityJourney {
+  GetCurrentJourney(): EntityJourney | undefined {
     return this.repository.GetCurrentJourney()
   }
 

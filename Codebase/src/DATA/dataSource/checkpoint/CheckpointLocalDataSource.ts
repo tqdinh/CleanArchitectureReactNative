@@ -4,6 +4,12 @@ import MMKVStorage from "mmkv/MMKVStorage";
 import { JourneyModel } from "models/JourneyModel";
 import { useRealm } from "@realm/react";
 import { CheckpointModel } from "models/CheckpointModel";
+import EntityJourney from "DOMAIN/entities/EntityJourney";
+import { CheckpointSchema } from "localDB/realm/CheckpointSchema";
+import { JourneySchema } from "localDB/realm/JourneySchema";
+import { UpdateMode } from "realm";
+import EntityPhoto from "DOMAIN/entities/EntityPhoto";
+import { PhotoSchema } from "localDB/realm/PhotoSchema";
 
 export class CheckpointLocalDataSource implements CheckpointDataSource {
   private realm = useRealm();
@@ -12,57 +18,46 @@ export class CheckpointLocalDataSource implements CheckpointDataSource {
     return MMKVStorage.getCurrentJourney();
   }
 
-  private createNewCheckpointInLocalDB(
-    entityCheckpoint: EntityCheckpoint
-  ): CheckpointModel {
-    const id = new Realm.BSON.ObjectId();
-    const checkpointSchemaName = "Checkpoint";
-    const createdAt = new Date();
-		const newCheckpointRecord = {
-			_id: id,
-			description: entityCheckpoint.getDescription(),
-			starting_time: entityCheckpoint.getStartingTime(),
-			createdAt: createdAt,
-			photos: [],
-		}
-    // Write to Database
-    this.realm.write(() => {
-      this.realm.create(checkpointSchemaName, newCheckpointRecord);
-    });
-    const newCheckpointModel: CheckpointModel = {
-      _id: id,
-      journey_id: this.getCurrentJourneyFromLocalStorage()?._id,
-      description: entityCheckpoint.getDescription(),
-      starting_time: entityCheckpoint.getStartingTime(),
-      createdAt: createdAt,
-      photoIds: [],
-    };
-
-		this.appendNewCheckpointToCurrentJourney(
-			this.getCurrentJourneyFromLocalStorage(),
-			newCheckpointRecord
-		)
-    return newCheckpointModel;
-  }
-
-  private appendNewCheckpointToCurrentJourney(
-    currentJourney: JourneyModel,
-    newCheckpointRecord: any
+  CreateNewCheckpointWithPhotoInCurrentJourney(
+    entityCheckpoint: EntityCheckpoint,
+    entityPhoto: EntityPhoto,
+    entityJourney: EntityJourney
   ) {
-		// Upsert an Object: https://www.mongodb.com/docs/realm/sdk/react-native/crud/update/
-		this.realm.write(() => {
-      this.realm.create('Journey', {
-        _id: currentJourney?._id,
-        checkpoints: newCheckpointRecord,	// TODO: append to array, fix me
-      });
+    // get journey record from local DB
+    if (entityJourney.getId() === undefined) {
+      throw new Error("Error: Current Journey is undefined!");
+    }
+    const currentJourneyRecord = this.realm.objectForPrimaryKey<JourneySchema>(
+      "Journey",
+      entityJourney.getId()
+    );
+    if (currentJourneyRecord === null) return;
+
+    // create new Checkpoint
+
+    this.realm.write(() => {
+      const newPhotoId = new Realm.BSON.ObjectId();
+      const photoRecord = this.realm.create<PhotoSchema>(
+        PhotoSchema.schema.name,
+        {
+          _id: newPhotoId,
+          photo_path: entityPhoto.getPhotoPath(),
+        }
+      );
+
+      const newCheckpointId = new Realm.BSON.ObjectId();
+      const checkpointRecord = this.realm.create<CheckpointSchema>(
+        CheckpointSchema.schema.name,
+        {
+          _id: newCheckpointId,
+          description: entityCheckpoint.getDescription(),
+          starting_time: entityCheckpoint.getStartingTime(),
+          photos: [photoRecord],
+        }
+      );
+      // append checkpoint to journey
+      currentJourneyRecord.checkpoints.push(checkpointRecord);
+      this.realm.create("Journey", currentJourneyRecord, UpdateMode.Modified);
     });
-
-	}
-
-  CreateNewCheckpointInCurrentJourney(entityCheckpoint: EntityCheckpoint) {
-    const currentJourney = this.getCurrentJourneyFromLocalStorage();
-    // save in local DB, append to journey schema
-    const newCheckpoint = this.createNewCheckpointInLocalDB(entityCheckpoint);
-    // TODO: save in store
   }
 }

@@ -1,8 +1,14 @@
 import { CheckpointRepository } from "DATA/repository/checkpoint/CheckpointRepository";
 import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint";
+import EntityJourney from "DOMAIN/entities/EntityJourney";
+import EntityPhoto from "DOMAIN/entities/EntityPhoto";
 
 export interface CheckpointUsecase {
-  CreateNewCheckpointInCurrentJourney(entityCheckpoint: EntityCheckpoint): any;
+  CreateNewCheckpointWithPhotoInCurrentJourney(
+    entityCheckpoint: EntityCheckpoint,
+    entityPhoto: EntityPhoto,
+    entityJourney: EntityJourney
+  ): any;
 }
 
 export class CheckpointUsecaseImpl implements CheckpointUsecase {
@@ -10,7 +16,15 @@ export class CheckpointUsecaseImpl implements CheckpointUsecase {
   constructor(_repository: CheckpointRepository) {
     this.repository = _repository;
   }
-  CreateNewCheckpointInCurrentJourney(entityCheckpoint: EntityCheckpoint) {
-    this.repository.CreateNewCheckpointInCurrentJourney(entityCheckpoint)
+  CreateNewCheckpointWithPhotoInCurrentJourney(
+    entityCheckpoint: EntityCheckpoint,
+    entityPhoto: EntityPhoto,
+    entityJourney: EntityJourney
+  ) {
+    this.repository.CreateNewCheckpointWithPhotoInCurrentJourney(
+      entityCheckpoint,
+      entityPhoto,
+      entityJourney
+    );
   }
 }

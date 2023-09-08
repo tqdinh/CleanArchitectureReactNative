@@ -1,8 +1,8 @@
 import { Text, TouchableOpacity, View } from "react-native"
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import MapboxGL, { UserLocationRenderMode } from "@rnmapbox/maps"
 import { trekkingMapStyle } from "./style"
-import PhotoCarousel from "./components/PhotoCarousel"
+import PhotoCarousel, { PhotoCarouselItem } from "./components/PhotoCarousel"
 import { testingPhotos } from "./components/testingPhotos"
 import { useFocusEffect } from "@react-navigation/native"
 import { useTrekkingMapViewModel } from "./TrekkingMapViewModel"
@@ -20,12 +20,14 @@ const TrekkingMap = () => {
   const [followUserLocation, setFollowUserLocation] = useState(true)
   // const journeyStarted = useAppSelector((state: TrekkingState) => state.journeyStarted)
   const [journeyStarted, setJourneyStarted] = useState(false)
+  const [journeyPhotos, setJourneyPhotos] = useState<PhotoCarouselItem[]>([])
 
   const {
     goToTrekkingCamera,
     startNewJourney,
     finishJourney,
     getSavedJourneyStatusInLocalStorage,
+    GetAllPhotosFromCurrentJourney,
   } = useTrekkingMapViewModel()
 
   useFocusEffect(
@@ -36,6 +38,13 @@ const TrekkingMap = () => {
       )
     }, [])
   )
+
+  useEffect(()=> {
+    if (shownRecordsCarousel) {
+      setJourneyPhotos(GetAllPhotosFromCurrentJourney())
+    }
+    console.log(journeyPhotos)
+  }, [shownRecordsCarousel])
 
   const requestAndroidLocationPermissions = async () => {
     await MapboxGL.requestAndroidLocationPermissions()
@@ -85,7 +94,7 @@ const TrekkingMap = () => {
       {journeyStarted && shownRecordsCarousel && (
         <View style={trekkingMapStyle.carouselContainer}>
           <View style={trekkingMapStyle.carousel}>
-            <PhotoCarousel data={testingPhotos}></PhotoCarousel>
+            <PhotoCarousel data={journeyPhotos}></PhotoCarousel>
           </View>
           <TouchableOpacity
             style={trekkingMapStyle.carouselBackButton}

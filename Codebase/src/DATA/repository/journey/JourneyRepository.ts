@@ -5,7 +5,7 @@ import EntityPhoto from "DOMAIN/entities/EntityPhoto"
 
 export interface JourneyRepository {
   CreateNewJourney(entityJourney: EntityJourney): any
-  GetCurrentJourney(): EntityJourney
+  GetCurrentJourney(): EntityJourney | undefined
 }
 
 export class JourneyRepositoryImpl implements JourneyRepository {
@@ -13,7 +13,7 @@ export class JourneyRepositoryImpl implements JourneyRepository {
   constructor(_localDataSource: JourneyLocalDataSource) {
     this.localDataSource = _localDataSource
   }
-  GetCurrentJourney(): EntityJourney {
+  GetCurrentJourney(): EntityJourney | undefined {
     return this.localDataSource.GetCurrentJourney()
   }
 
