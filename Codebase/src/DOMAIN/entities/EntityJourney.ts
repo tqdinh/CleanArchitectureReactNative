@@ -1,22 +1,27 @@
+import { JourneyStatus } from "models/JourneyModel";
+
 export default class EntityJourney {
   private id?: Realm.BSON.ObjectId;
   private title?: string;
   private image_header?: string;
   private total_subcriber?: number;
   private createdAt?: Date;
+  private status?: JourneyStatus;
 
   constructor(
     _id?: Realm.BSON.ObjectId,
     _title?: string,
     _image_header?: string,
     _total_subcriber?: number,
-    _createdAt?: Date
+    _createdAt?: Date,
+    _status?: JourneyStatus
   ) {
     this.id = _id;
     this.title = _title;
     this.image_header = _image_header;
     this.total_subcriber = _total_subcriber;
     this.createdAt = _createdAt;
+    this.status = _status;
   }
 
   getId = () => {
@@ -37,5 +42,9 @@ export default class EntityJourney {
 
   getDateCreated = () => {
     return this.createdAt;
+  };
+
+  getStatus = () => {
+    return this.status ?? JourneyStatus.UNDEFINED;
   };
 }

@@ -6,4 +6,5 @@ export abstract class JourneyDataSource {
   abstract CreateNewJourney(entityJourney: EntityJourney): any 
   abstract QueryAllJourneysInLocalDB(): EntityJourney[]
   abstract GetCurrentJourney(): EntityJourney | undefined
+  abstract FinishCurrentJourney(): any
 }

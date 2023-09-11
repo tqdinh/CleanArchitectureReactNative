@@ -1,6 +1,6 @@
 import EntityPhoto from "DOMAIN/entities/EntityPhoto";
 import { PhotoDataSource } from "./PhotoDataSource";
-import { PhotoSchema, photoContext } from "localDB/realm/PhotoSchema";
+import { PhotoSchema } from "localDB/realm/PhotoSchema";
 import { useRealm } from "@realm/react";
 import EntityJourney from "DOMAIN/entities/EntityJourney";
 import { JourneySchema } from "localDB/realm/JourneySchema";

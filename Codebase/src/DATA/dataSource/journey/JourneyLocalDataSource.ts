@@ -1,16 +1,9 @@
 import EntityJourney from "DOMAIN/entities/EntityJourney";
 import { JourneyDataSource } from "./JourneyDataSource";
 import { JourneyModel, JourneyStatus } from "models/JourneyModel";
-import { LocalStorageLocalDataSource } from "../localStorage/LocalStorageLocalDataSource";
-import { LocalStorageUsecaseImpl } from "DOMAIN/usecases/localStorage/LocalStorageUsecase";
-import { LocalStorageRepositoryImpl } from "DATA/repository/localStorage/LocalStorageRepository";
-import EntityLocalStorage from "DOMAIN/entities/EntityLocalStorage";
 import { useDispatch } from "react-redux";
-import { trekkingActions } from "redux/trekking/trekkingSlice";
 import { JourneySchema } from "localDB/realm/JourneySchema";
 import { useRealm } from "@realm/react";
-import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint";
-import EntityPhoto from "DOMAIN/entities/EntityPhoto";
 import MMKVStorage from "mmkv/MMKVStorage";
 import { UpdateMode } from "realm";
 
@@ -101,7 +94,7 @@ export class JourneyLocalDataSource implements JourneyDataSource {
     // Save New Journey in Redux Store
     // this.dispatch(trekkingActions.updateCurrentTrekkingJourney(newJourney));
 
-    this.QueryAllJourneysInLocalDB()
+    this.QueryAllJourneysInLocalDB();
   }
 
   QueryAllJourneysInLocalDB(): EntityJourney[] {
@@ -116,7 +109,6 @@ export class JourneyLocalDataSource implements JourneyDataSource {
 
   GetCurrentJourney(): EntityJourney | undefined {
     // // Get From Local Storage
-    // const currentJourney = this.getCurrentJourneyInLocalStorage();
     const currentJourney = this.getCurrentJourneyInLocalDB();
     if (currentJourney === undefined) return;
     // convert from JourneyModel To EntityJourney
@@ -125,8 +117,17 @@ export class JourneyLocalDataSource implements JourneyDataSource {
       currentJourney.title,
       currentJourney.image_header,
       currentJourney.total_subcriber,
-      currentJourney.createdAt
+      currentJourney.createdAt,
+      currentJourney.status
     );
     return entityJourney;
+  }
+
+  FinishCurrentJourney() {
+    const currentJourney = this.getCurrentJourneyInLocalDB();
+    if (currentJourney === undefined) return;
+
+    // set the status to FINISHED
+    this.updateJourneyStatusInLocalDB(currentJourney, JourneyStatus.FINISHED);
   }
 }
