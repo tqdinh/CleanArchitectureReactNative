@@ -281,7 +281,7 @@ class CleanGenRun(CleanGen):
         self.getRepo()
         self.getDataSource()
 
-        self.genfolders()
+        # self.genfolders()
 
         self.getEntityContent()
         self.getUsecaseContent()
@@ -378,9 +378,9 @@ class CleanGenRun(CleanGen):
         self.generateAppModelContent()
 
     def execute(self):
+        self.genfolders()
         self.generateFiles()
         self.generateContents()
-        self.GenFolderStructureTree()
 
 
 class CleanGenDebug(CleanGen):
@@ -450,8 +450,8 @@ class CleanGenDebug(CleanGen):
     def execute(self):
         self.generateFiles()
         self.generateContents()
+        k.GenFolderStructureTree()
 
 
 k = CleanGenRun()
-# k = CleanGenDebug()
 k.execute()
