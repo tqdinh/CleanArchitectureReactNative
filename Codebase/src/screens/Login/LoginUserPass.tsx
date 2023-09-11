@@ -1,11 +1,13 @@
 //import liraries
 
 import React, { useState } from 'react'
+import Config from "react-native-config";
 import {
   Image,
   ImageBackground,
   SafeAreaView,
   StyleSheet,
+  Text,
   View
 } from 'react-native'
 import { useLoginUserPassViewModel } from './LoginUserPassViewModel'
@@ -26,6 +28,7 @@ const LoginUserPass = () => {
   const [password, setpassword] = useState<string>('ab1234cd')
   const [hidePassword, setHidePassword] = useState<boolean>(true)
 
+  console.log(Config.API_URL);
 
   return (
     <ImageBackground
@@ -36,10 +39,7 @@ const LoginUserPass = () => {
     >
       <SafeAreaView style={styles.container}>
         <View style={styles.imageLogoContainer}>
-          <Image
-            source={{}}
-            resizeMode='contain'
-          />
+
         </View>
         <View style={styles.formContainer}>
           <CustomTextInput
@@ -90,7 +90,10 @@ const LoginUserPass = () => {
             text='Skip'
             disabled={false}
           />
+          <Text>version name :{Config.VERSION_CODE_IOS}</Text>
+          <Text>version name :{Config.VERSION_NAME_IOS}</Text>
         </View>
+
       </SafeAreaView>
     </ImageBackground>
   )

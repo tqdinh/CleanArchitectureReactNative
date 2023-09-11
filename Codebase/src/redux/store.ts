@@ -2,11 +2,13 @@ import createSagaMiddleware from '@redux-saga/core'
 import { AnyAction, combineReducers, configureStore } from '@reduxjs/toolkit'
 import rootSaga from 'saga/rootsaga'
 import { authReducer } from './auth/authSlice'
+import { trekkingReducer } from './trekking/trekkingSlice'
 const middlewares: any = []
 const sagaMiddleware = createSagaMiddleware()
 middlewares.push(sagaMiddleware)
 const appReducer = combineReducers({
     auth: authReducer,
+    trekking: trekkingReducer,
 })
 
 const rootReducer = (state: any, action: AnyAction) => {
