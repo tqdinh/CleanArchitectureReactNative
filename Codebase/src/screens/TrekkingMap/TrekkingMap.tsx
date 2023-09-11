@@ -100,7 +100,7 @@ const TrekkingMap = () => {
             style={trekkingMapStyle.carouselBackButton}
             onPress={() => setShownRecordsCarousel(false)}
           >
-            <MaterialIcons name={"flip-to-back"} size={30} />
+            <MaterialIcons name={"arrow-back"} size={30} />
           </TouchableOpacity>
         </View>
       )}

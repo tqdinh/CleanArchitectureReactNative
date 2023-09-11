@@ -13,6 +13,7 @@ import { CheckpointRepositoryImpl } from "DATA/repository/checkpoint/CheckpointR
 import { CheckpointUsecaseImpl } from "DOMAIN/usecases/checkpoint/CheckpointUsecase";
 import { useTrekkingMapViewModel } from "screens/TrekkingMap/TrekkingMapViewModel";
 import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint";
+import Toast from 'react-native-simple-toast';
 
 const CameraViewModel = () => {
   const navigation = useNavigation();
@@ -91,6 +92,8 @@ const CameraViewModel = () => {
     const photoPath = await movePhoto(photo);
 
     CreateNewCheckpointWithPhotoInCurrentJourney(photoPath, currentLocation);
+
+    Toast.show('New photo is taken!', Toast.SHORT);
   };
 
   const goBackToPreviousScreen = () => {

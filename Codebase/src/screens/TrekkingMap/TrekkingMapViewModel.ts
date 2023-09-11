@@ -12,6 +12,7 @@ import { LocalStorageUsecaseImpl } from "DOMAIN/usecases/localStorage/LocalStora
 import { PhotoUsecaseImpl } from "DOMAIN/usecases/photo/PhotoUsecase";
 import { JourneyStatus } from "models/JourneyModel";
 import { PhotoCarouselItem } from "./components/PhotoCarousel";
+import Toast from 'react-native-simple-toast';
 
 const TrekkingMapViewModel = () => {
   const navigation = useNavigation<any>();
@@ -36,13 +37,13 @@ const TrekkingMapViewModel = () => {
   };
 
   const startNewJourney = () => {
-    console.log("Start New Journey!");
     journeyUsecase.CreateNewJourney(new EntityJourney());
+    Toast.show('Start New Journey, take a picture and enjoy!', Toast.SHORT);
   };
 
   const finishJourney = () => {
-    console.log("Finish Journey");
     journeyUsecase.FinishCurrentJourney();
+    Toast.show('Finished Journey!', Toast.SHORT);
   };
 
   const getSavedJourneyStatusInLocalStorage = () => {
