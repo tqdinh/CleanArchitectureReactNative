@@ -6,6 +6,7 @@ import { JourneySchema } from "localDB/realm/JourneySchema";
 import { useRealm } from "@realm/react";
 import MMKVStorage from "mmkv/MMKVStorage";
 import { UpdateMode } from "realm";
+import { trekkingActions } from "redux/trekking/trekkingSlice";
 
 export class JourneyLocalDataSource implements JourneyDataSource {
   private dispatch = useDispatch();
@@ -26,7 +27,7 @@ export class JourneyLocalDataSource implements JourneyDataSource {
   private createNewJourneyInLocalDB(entityJourney: EntityJourney) {
     const id = new Realm.BSON.ObjectId();
     const journeySchemaName = "Journey";
-    const status = JourneyStatus.STARTED;
+    const status = JourneyStatus.UNDEFINED;
 
     // Write to Database
     this.realm.write(() => {
@@ -37,6 +38,7 @@ export class JourneyLocalDataSource implements JourneyDataSource {
         total_subcriber: entityJourney.getTotalSubcriber(),
         status: status,
         checkpoints: [],
+        createdAt: new Date()
       });
     });
   }
@@ -94,7 +96,22 @@ export class JourneyLocalDataSource implements JourneyDataSource {
     // Save New Journey in Redux Store
     // this.dispatch(trekkingActions.updateCurrentTrekkingJourney(newJourney));
 
-    this.QueryAllJourneysInLocalDB();
+    // update all journey to redux
+    const currentJourneys = this.realm.objects<JourneySchema>("Journey");
+    let allJourneyModels: JourneyModel[] = [];
+    for (let i = 0; i < currentJourneys.length; i++) {
+      const journey = currentJourneys[i];
+      const journeymodel: JourneyModel = {
+        _id: journey._id.toString(),
+        title: journey.title,
+        image_header: journey.image_header ?? "",
+        total_subcriber: journey.total_subcriber ?? 0,
+        createdAt: journey.createdAt.toString(),
+        status: journey.status,
+      };
+      allJourneyModels.push(journeymodel);
+    }
+    this.dispatch(trekkingActions.updateAllJourneys(allJourneyModels));
   }
 
   QueryAllJourneysInLocalDB(): EntityJourney[] {
@@ -129,5 +146,39 @@ export class JourneyLocalDataSource implements JourneyDataSource {
 
     // set the status to FINISHED
     this.updateJourneyStatusInLocalDB(currentJourney, JourneyStatus.FINISHED);
+  }
+
+  GetAllJourneys(): EntityJourney[] {
+    let allJourneyEntities: EntityJourney[] = [];
+    let allJourneyModels: JourneyModel[] = [];
+    const journeys = this.realm.objects<JourneySchema>("Journey");
+    for (let i = 0; i < journeys.length; i++) {
+      const journey = journeys[i];
+      allJourneyEntities.push(
+        new EntityJourney(
+          journey._id,
+          journey.title,
+          journey.image_header,
+          journey.total_subcriber,
+          journey.createdAt,
+          journey.status
+        )
+      );
+
+      const journeymodel: JourneyModel = {
+        _id: journey._id.toString(),
+        title: journey.title,
+        image_header: journey.image_header ?? "",
+        total_subcriber: journey.total_subcriber ?? 0,
+        createdAt: journey.createdAt.toString(),
+        status: journey.status,
+      };
+      allJourneyModels.push(journeymodel);
+    }
+
+    // also update to redux
+    this.dispatch(trekkingActions.updateAllJourneys(allJourneyModels));
+
+    return allJourneyEntities;
   }
 }

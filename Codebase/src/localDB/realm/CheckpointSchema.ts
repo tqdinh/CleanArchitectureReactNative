@@ -1,3 +1,4 @@
+import 'react-native-get-random-values'
 import Realm from "realm";
 import { PhotoSchema } from "./PhotoSchema";
 

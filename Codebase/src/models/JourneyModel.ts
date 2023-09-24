@@ -1,11 +1,11 @@
 export interface Journey {
-  _id: Realm.BSON.ObjectId;
+  _id: string;
   title: string;
   image_header: string;
   total_subcriber: number;
-  createdAt: Date;
-  status: JourneyStatus;
-  checkpointIds: string[] // store checkpoint ids
+  createdAt?: string;
+  status?: JourneyStatus;
+  checkpointIds?: string[] // store checkpoint ids
 }
 
 export type JourneyModel = Journey | undefined;

@@ -37,7 +37,7 @@ const TrekkingMapViewModel = () => {
   };
 
   const startNewJourney = () => {
-    journeyUsecase.CreateNewJourney(new EntityJourney());
+    // TODO: Set current journey to start
     Toast.show('Start New Journey, take a picture and enjoy!', Toast.SHORT);
   };
 

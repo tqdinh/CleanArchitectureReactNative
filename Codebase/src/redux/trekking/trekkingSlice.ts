@@ -8,12 +8,14 @@ export interface TrekkingState {
   currentTrekkingJourney: JourneyModel;
   currentTrekkingCheckpoint: CheckpointModel;
   currentTrekkingPhoto: TrekkingPhoto | undefined;
+  allJourneys: JourneyModel[]
 }
 
 const initialState: TrekkingState = {
   currentTrekkingJourney: undefined,
   currentTrekkingCheckpoint: undefined,
   currentTrekkingPhoto: undefined,
+  allJourneys: []
 };
 
 const trekkingSlice = createSlice({
@@ -32,6 +34,12 @@ const trekkingSlice = createSlice({
     ) {
       state.currentTrekkingJourney = action.payload;
     },
+    updateAllJourneys(
+      state,
+      action: PayloadAction<JourneyModel[]>
+    ) {
+      state.allJourneys = action.payload
+    }
     
   },
 });

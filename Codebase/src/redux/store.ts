@@ -3,6 +3,7 @@ import { AnyAction, combineReducers, configureStore } from '@reduxjs/toolkit'
 import rootSaga from 'saga/rootsaga'
 import { authReducer } from './auth/authSlice'
 import { trekkingReducer } from './trekking/trekkingSlice'
+import { TypedUseSelectorHook, useSelector } from 'react-redux'
 const middlewares: any = []
 const sagaMiddleware = createSagaMiddleware()
 middlewares.push(sagaMiddleware)
@@ -28,4 +29,5 @@ sagaMiddleware.run(rootSaga)
 export default store
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
 

@@ -3,10 +3,11 @@ import React, { FC } from "react";
 import { journeyItemStyle } from "../styles";
 
 interface JourneyItemProps {
-  id: number;
+  id: string;
   imageUri: string;
   totalSubcriber: number;
-  onViewAll?: (id: number, imageUri: string, totalSubcriber: number) => void;
+  onViewAll?: (id: string, imageUri: string, totalSubcriber: number) => void;
+  createdAt: string
 }
 
 const JourneyItem: FC<JourneyItemProps> = ({
@@ -14,6 +15,7 @@ const JourneyItem: FC<JourneyItemProps> = ({
   imageUri,
   totalSubcriber,
   onViewAll,
+  createdAt
 }) => {
   return (
     <View style={journeyItemStyle.container}>
@@ -22,6 +24,8 @@ const JourneyItem: FC<JourneyItemProps> = ({
         <View style={journeyItemStyle.subcriberContainer}>
           <Text>Total subcribers</Text>
           <Text style={journeyItemStyle.subcriberText}>{totalSubcriber}</Text>
+          <Text>Created At</Text>
+          <Text style={journeyItemStyle.subcriberText}>{createdAt}</Text>
         </View>
       </View>
 
