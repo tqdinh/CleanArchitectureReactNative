@@ -6,12 +6,20 @@ export interface JourneyUsecase {
   GetCurrentJourney(): EntityJourney | undefined;
   FinishCurrentJourney(): any;
   GetAllJourneys(): EntityJourney[];
+  SetCurrentJourney(entityJourney: EntityJourney): any;
+  SetCurrentJourneyStatus(entityJourney: EntityJourney): any;
 }
 
 export class JourneyUsecaseImpl implements JourneyUsecase {
   private repository: JourneyRepository;
   constructor(_repository: JourneyRepository) {
     this.repository = _repository;
+  }
+  SetCurrentJourneyStatus(entityJourney: EntityJourney) {
+    this.repository.SetCurrentJourneyStatus(entityJourney);
+  }
+  SetCurrentJourney(entityJourney: EntityJourney) {
+    this.repository.SetCurrentJourney(entityJourney);
   }
 
   FinishCurrentJourney() {

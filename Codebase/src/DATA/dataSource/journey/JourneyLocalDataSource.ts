@@ -25,7 +25,10 @@ export class JourneyLocalDataSource implements JourneyDataSource {
   }
 
   private createNewJourneyInLocalDB(entityJourney: EntityJourney) {
-    const id = new Realm.BSON.ObjectId();
+    // query the last id
+    const journeys = this.realm.objects<JourneySchema>("Journey");
+    const id =
+      journeys.length === 0 ? 1 : journeys[journeys.length - 1]._id + 1;
     const journeySchemaName = "Journey";
     const status = JourneyStatus.UNDEFINED;
 
@@ -38,7 +41,7 @@ export class JourneyLocalDataSource implements JourneyDataSource {
         total_subcriber: entityJourney.getTotalSubcriber(),
         status: status,
         checkpoints: [],
-        createdAt: new Date()
+        createdAt: new Date(),
       });
     });
   }
@@ -77,6 +80,17 @@ export class JourneyLocalDataSource implements JourneyDataSource {
     return undefined;
   }
 
+  private getJourneyByIdInLocalDB(id: number): JourneySchema | undefined {
+    const journeys = this.realm.objects<JourneySchema>("Journey");
+    for (let i = journeys.length - 1; i >= 0; i--) {
+      const journey = journeys[i];
+      if (journey._id === id) {
+        return journey;
+      }
+    }
+    return undefined;
+  }
+
   CreateNewJourney(entityJourney: EntityJourney) {
     // Change state of other journey to FINISHED when create new Journey
     const journeys = this.realm.objects<JourneySchema>("Journey");
@@ -102,11 +116,11 @@ export class JourneyLocalDataSource implements JourneyDataSource {
     for (let i = 0; i < currentJourneys.length; i++) {
       const journey = currentJourneys[i];
       const journeymodel: JourneyModel = {
-        _id: journey._id.toString(),
+        _id: journey._id,
         title: journey.title,
         image_header: journey.image_header ?? "",
         total_subcriber: journey.total_subcriber ?? 0,
-        createdAt: journey.createdAt.toString(),
+        createdAtTimestamp: journey.createdAt.getTime(),
         status: journey.status,
       };
       allJourneyModels.push(journeymodel);
@@ -125,19 +139,9 @@ export class JourneyLocalDataSource implements JourneyDataSource {
   }
 
   GetCurrentJourney(): EntityJourney | undefined {
-    // // Get From Local Storage
-    const currentJourney = this.getCurrentJourneyInLocalDB();
-    if (currentJourney === undefined) return;
-    // convert from JourneyModel To EntityJourney
-    const entityJourney = new EntityJourney(
-      currentJourney._id,
-      currentJourney.title,
-      currentJourney.image_header,
-      currentJourney.total_subcriber,
-      currentJourney.createdAt,
-      currentJourney.status
-    );
-    return entityJourney;
+    // get current journey id from store
+
+    return undefined;
   }
 
   FinishCurrentJourney() {
@@ -166,11 +170,11 @@ export class JourneyLocalDataSource implements JourneyDataSource {
       );
 
       const journeymodel: JourneyModel = {
-        _id: journey._id.toString(),
+        _id: journey._id,
         title: journey.title,
         image_header: journey.image_header ?? "",
         total_subcriber: journey.total_subcriber ?? 0,
-        createdAt: journey.createdAt.toString(),
+        createdAtTimestamp: journey.createdAt.getTime(),
         status: journey.status,
       };
       allJourneyModels.push(journeymodel);
@@ -180,5 +184,30 @@ export class JourneyLocalDataSource implements JourneyDataSource {
     this.dispatch(trekkingActions.updateAllJourneys(allJourneyModels));
 
     return allJourneyEntities;
+  }
+
+  SetCurrentJourney(entityJourney: EntityJourney) {
+    // no need to update to local db
+    const id = entityJourney.getId();
+    if (id === undefined) return;
+    // update to redux store
+    this.dispatch(trekkingActions.updateCurrentJourneyById(id));
+  }
+
+  SetCurrentJourneyStatus(entityJourney: EntityJourney) {
+    // update to local db
+    const id = entityJourney.getId();
+    const status = entityJourney.getStatus();
+    if (id !== undefined && status !== undefined) {
+      const currentJourneyRecord = this.getJourneyByIdInLocalDB(id);
+      if (currentJourneyRecord !== undefined) {
+        // update to local db
+        this.updateJourneyStatusInLocalDB(currentJourneyRecord, status);
+        // update to redux store
+        this.dispatch(
+          trekkingActions.updateCurrentJourneyStatusById({ id, status })
+        );
+      }
+    }
   }
 }

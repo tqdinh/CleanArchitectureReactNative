@@ -1,7 +1,7 @@
 import { JourneyStatus } from "models/JourneyModel";
 
 export default class EntityJourney {
-  private id?: Realm.BSON.ObjectId;
+  private id?: number;
   private title?: string;
   private image_header?: string;
   private total_subcriber?: number;
@@ -9,7 +9,7 @@ export default class EntityJourney {
   private status?: JourneyStatus;
 
   constructor(
-    _id?: Realm.BSON.ObjectId,
+    _id?: number,
     _title?: string,
     _image_header?: string,
     _total_subcriber?: number,

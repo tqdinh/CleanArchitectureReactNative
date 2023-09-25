@@ -3,19 +3,19 @@ import React, { FC } from "react";
 import { journeyItemStyle } from "../styles";
 
 interface JourneyItemProps {
-  id: string;
   imageUri: string;
   totalSubcriber: number;
-  onViewAll?: (id: string, imageUri: string, totalSubcriber: number) => void;
-  createdAt: string
+  onViewAll?: () => void;
+  createdAt: string;
+  status: string;
 }
 
 const JourneyItem: FC<JourneyItemProps> = ({
-  id,
   imageUri,
   totalSubcriber,
   onViewAll,
-  createdAt
+  createdAt,
+  status,
 }) => {
   return (
     <View style={journeyItemStyle.container}>
@@ -26,6 +26,8 @@ const JourneyItem: FC<JourneyItemProps> = ({
           <Text style={journeyItemStyle.subcriberText}>{totalSubcriber}</Text>
           <Text>Created At</Text>
           <Text style={journeyItemStyle.subcriberText}>{createdAt}</Text>
+          <Text>Status</Text>
+          <Text style={journeyItemStyle.subcriberText}>{status}</Text>
         </View>
       </View>
 
@@ -33,7 +35,7 @@ const JourneyItem: FC<JourneyItemProps> = ({
         style={journeyItemStyle.viewAllButton}
         onPress={() => {
           if (onViewAll) {
-            onViewAll(id, imageUri, totalSubcriber);
+            onViewAll();
           }
         }}
       >

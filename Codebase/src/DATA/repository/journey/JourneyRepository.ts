@@ -6,12 +6,20 @@ export interface JourneyRepository {
   GetCurrentJourney(): EntityJourney | undefined;
   FinishCurrentJourney(): any;
   GetAllJourneys(): EntityJourney[];
+  SetCurrentJourney(entityJourney: EntityJourney): any;
+  SetCurrentJourneyStatus(entityJourney: EntityJourney): any;
 }
 
 export class JourneyRepositoryImpl implements JourneyRepository {
   private localDataSource: JourneyLocalDataSource;
   constructor(_localDataSource: JourneyLocalDataSource) {
     this.localDataSource = _localDataSource;
+  }
+  SetCurrentJourneyStatus(entityJourney: EntityJourney) {
+    this.localDataSource.SetCurrentJourneyStatus(entityJourney);
+  }
+  SetCurrentJourney(entityJourney: EntityJourney) {
+    this.localDataSource.SetCurrentJourney(entityJourney);
   }
   GetAllJourneys(): EntityJourney[] {
     return this.localDataSource.GetAllJourneys();

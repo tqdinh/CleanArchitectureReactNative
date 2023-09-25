@@ -3,7 +3,8 @@ import { JourneyLocalDataSource } from "DATA/dataSource/journey/JourneyLocalData
 import { JourneyRepositoryImpl } from "DATA/repository/journey/JourneyRepository";
 import EntityJourney from "DOMAIN/entities/EntityJourney";
 import { JourneyUsecaseImpl } from "DOMAIN/usecases/journey/JourneyUsecase";
-import Toast from 'react-native-simple-toast';
+import { JourneyModel } from "models/JourneyModel";
+import Toast from "react-native-simple-toast";
 import { fakeJourneys } from "test/journeyFakeDatas";
 
 const TrekkingJourneyViewModel = () => {
@@ -13,30 +14,44 @@ const TrekkingJourneyViewModel = () => {
   const journeyUsecase = new JourneyUsecaseImpl(
     new JourneyRepositoryImpl(journeyLocalDataSource)
   );
-  
+
   const getAllJourneys = () => {
-    return journeyUsecase.GetAllJourneys()
-  }
+    return journeyUsecase.GetAllJourneys();
+  };
 
   const addNewJourney = () => {
     journeyUsecase.CreateNewJourney(new EntityJourney());
   };
 
   const searchJourney = () => {
-    Toast.show('To Be Developed!', Toast.SHORT);
+    Toast.show("To Be Developed!", Toast.SHORT);
   };
 
-  const navigateToTrekkingMapWithJourney = (item: any) => {
+  const navigateToTrekkingMap = () => {
     navigation.navigate("TrekkingMap");
-  }; 
-  
-  
+  };
+
+  const handleOnViewJourney = (item: JourneyModel) => {
+    journeyUsecase.SetCurrentJourney(
+      new EntityJourney(
+        item?._id,
+        item?.title,
+        item?.image_header,
+        item?.total_subcriber,
+        new Date(item?.createdAtTimestamp ?? ""),
+        item?.status
+      )
+    );
+
+    navigateToTrekkingMap();
+  };
+
   return {
     getAllJourneys,
     addNewJourney,
     searchJourney,
-    navigateToTrekkingMapWithJourney
-  }
-}
+    handleOnViewJourney,
+  };
+};
 
-export const useTrekkingMapViewModel = TrekkingJourneyViewModel
+export const useTrekkingMapViewModel = TrekkingJourneyViewModel;

@@ -12,10 +12,16 @@ import { LocalStorageUsecaseImpl } from "DOMAIN/usecases/localStorage/LocalStora
 import { PhotoUsecaseImpl } from "DOMAIN/usecases/photo/PhotoUsecase";
 import { JourneyStatus } from "models/JourneyModel";
 import { PhotoCarouselItem } from "./components/PhotoCarousel";
-import Toast from 'react-native-simple-toast';
+import Toast from "react-native-simple-toast";
+import { RootState, useAppSelector } from "redux/store";
 
 const TrekkingMapViewModel = () => {
   const navigation = useNavigation<any>();
+
+  const currentJourney = useAppSelector(
+    (state: RootState) => state.trekking.currentJourney
+  );
+
   // journey
   const journeyLocalDataSource = new JourneyLocalDataSource();
   const journeyUsecase = new JourneyUsecaseImpl(
@@ -38,12 +44,22 @@ const TrekkingMapViewModel = () => {
 
   const startNewJourney = () => {
     // TODO: Set current journey to start
-    Toast.show('Start New Journey, take a picture and enjoy!', Toast.SHORT);
+    journeyUsecase.SetCurrentJourneyStatus(
+      new EntityJourney(
+        currentJourney?._id,
+        currentJourney?.title,
+        currentJourney?.image_header,
+        currentJourney?.total_subcriber,
+        new Date(currentJourney?.createdAtTimestamp ?? 0),
+        JourneyStatus.STARTED
+      )
+    );
+    Toast.show("Start New Journey, take a picture and enjoy!", Toast.SHORT);
   };
 
   const finishJourney = () => {
     journeyUsecase.FinishCurrentJourney();
-    Toast.show('Finished Journey!', Toast.SHORT);
+    Toast.show("Finished Journey!", Toast.SHORT);
   };
 
   const getSavedJourneyStatusInLocalStorage = () => {

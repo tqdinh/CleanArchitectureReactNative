@@ -4,7 +4,7 @@ import Realm from "realm";
 import { CheckpointSchema } from "./CheckpointSchema";
 
 export class JourneySchema extends Realm.Object<JourneySchema> {
-  _id!: Realm.BSON.ObjectId;
+  _id!: number;
   title!: string;
   image_header?: string;
   total_subcriber?: number;
@@ -16,7 +16,7 @@ export class JourneySchema extends Realm.Object<JourneySchema> {
   static schema = {
     name: "Journey",
     properties: {
-      _id: 'objectId',
+      _id: 'int',
       title: "string",
       image_header: "string?",
       total_subcriber: "int?",

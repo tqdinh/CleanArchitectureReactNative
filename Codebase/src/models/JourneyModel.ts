@@ -1,11 +1,11 @@
 export interface Journey {
-  _id: string;
-  title: string;
-  image_header: string;
-  total_subcriber: number;
-  createdAt?: string;
+  _id: number;
+  title?: string;
+  image_header?: string;
+  total_subcriber?: number;
+  createdAtTimestamp?: number;
   status?: JourneyStatus;
-  checkpointIds?: string[] // store checkpoint ids
+  checkpointIds?: number[]; // store checkpoint ids
 }
 
 export type JourneyModel = Journey | undefined;
@@ -16,4 +16,4 @@ export enum JourneyStatus {
   FINISHED = "FINISHED",
   PAUSED = "PAUSED",
   UNDEFINED = "UNDEFINED",
-};
+}
