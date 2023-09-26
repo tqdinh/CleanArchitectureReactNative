@@ -14,6 +14,7 @@ import { JourneyStatus } from "models/JourneyModel";
 import { PhotoCarouselItem } from "./components/PhotoCarousel";
 import Toast from "react-native-simple-toast";
 import { RootState, useAppSelector } from "redux/store";
+import fakePhotoModelDatas from "test/fakePhotoModelDatas";
 
 const TrekkingMapViewModel = () => {
   const navigation = useNavigation<any>();
@@ -90,6 +91,10 @@ const TrekkingMapViewModel = () => {
 
   const deleteSelectedPhoto = () => {};
 
+  const getFakePhotoModelDatas = () => {
+    return fakePhotoModelDatas
+  }
+
   return {
     journeyUsecase,
     goToTrekkingCamera,
@@ -97,6 +102,7 @@ const TrekkingMapViewModel = () => {
     finishJourney,
     getSavedJourneyStatusInLocalStorage,
     GetAllPhotosFromCurrentJourney,
+    getFakePhotoModelDatas,
   };
 };
 

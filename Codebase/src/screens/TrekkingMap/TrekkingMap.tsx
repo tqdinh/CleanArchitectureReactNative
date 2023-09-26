@@ -1,36 +1,35 @@
-import { Image, Pressable, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import MapboxGL, { UserLocationRenderMode } from "@rnmapbox/maps";
 import { trekkingMapStyle } from "./style";
 import PhotoCarousel, { PhotoCarouselItem } from "./components/PhotoCarousel";
-import { testingPhotos } from "./components/testingPhotos";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTrekkingMapViewModel } from "./TrekkingMapViewModel";
-import { JourneyStatus } from "../../models/JourneyModel";
+import { JourneyModel, JourneyStatus } from "../../models/JourneyModel";
 import { MaterialCommunityIcons, MaterialIcons } from "themes/appIcon";
 import { RootState, useAppSelector } from "redux/store";
-import { Position } from "geojson";
+import PhotoMapMarker from "./components/PhotoMapMarker";
+import { PhotoModel } from "models/PhotoModel";
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoidHFkaW5oaGNtdXMiLCJhIjoiY2xsNG5teDZzMDZkcDNmb2dpcnljbGpzbyJ9.FIQMCyKAxOnFiYZCZ9wsHQ"
 );
 
 // TODO: useHook https://github.com/realm/FindOurDevices/blob/main/app/hooks/useLocation.js
-type MarkerConfig = {
-  coords: Position;
-  color: string;
-};
 const TrekkingMap = () => {
   const [isPause, setIsPause] = useState(true);
   const [shownRecordsCarousel, setShownRecordsCarousel] = useState(false);
   const [followUserLocation, setFollowUserLocation] = useState(true);
-  // const journeyStarted = useAppSelector((state: TrekkingState) => state.journeyStarted)
   const [journeyPhotos, setJourneyPhotos] = useState<PhotoCarouselItem[]>([]);
 
-  const currentJourney = useAppSelector(
+  const currentJourney = useAppSelector<JourneyModel>(
     (state: RootState) => state.trekking.currentJourney
   );
 
   const journeyStarted = currentJourney?.status === JourneyStatus.STARTED;
+
+  const currentPhotos = useAppSelector<PhotoModel[]>(
+    (state: RootState) => state.trekking.currentPhotos
+  );
 
   const {
     goToTrekkingCamera,
@@ -56,30 +55,6 @@ const TrekkingMap = () => {
     await MapboxGL.requestAndroidLocationPermissions();
   };
 
-  const [selectedIndex, setSelectedIndex] = useState<number | undefined>();
-  const [anchor, setAnchor] = useState({ x: 0.5, y: 0.5 });
-  const [allowOverlap, setAllowOverlap] = useState(true);
-  const centerCoord = [-73.99155, 40.72];
-
-  const allColors = ["red", "green", "blue", "purple"];
-  const [show, setShow] = useState(true);
-  const [size, setSize] = useState(1);
-
-  const [markers, setMarkers] = useState<MarkerConfig[]>([]);
-  const randomizeCoordinatesAndColors = useCallback(() => {
-    const newMarkers = new Array(20).fill(0).map((o, i) => {
-      return {
-        coords: [
-          centerCoord[0] + (Math.random() - 0.5) * 0.008,
-          centerCoord[1] + (Math.random() - 0.5) * 0.008,
-        ],
-        color: allColors[i % allColors.length],
-      };
-    });
-
-    setMarkers(newMarkers);
-  }, []);
-
   return (
     <View style={trekkingMapStyle.container}>
       <View style={trekkingMapStyle.mapContainer}>
@@ -96,8 +71,6 @@ const TrekkingMap = () => {
                 setFollowUserLocation(false);
               }
             }}
-            defaultSettings={{ centerCoordinate: centerCoord, zoomLevel: 14 }}
-            centerCoordinate={centerCoord}
             zoomLevel={14}
           />
 
@@ -108,45 +81,8 @@ const TrekkingMap = () => {
             androidRenderMode={"normal"}
           />
 
-          {markers.map((marker, i) => {
-            return (
-              <MapboxGL.MarkerView
-                key={`MarkerView-${marker.coords.join("-")}`}
-                coordinate={marker.coords}
-                anchor={anchor}
-                allowOverlap={allowOverlap}
-                isSelected={i === selectedIndex}
-                style={{ display: show ? "flex" : "none" }}
-              >
-                <TouchableOpacity
-                  style={[
-                    {
-                      flex: 0,
-
-                      borderWidth: 2,
-                      borderColor: "white",
-                    },
-                    { backgroundColor: marker.color, padding: 4 * size },
-                  ]}
-                  onPress={() =>
-                    setSelectedIndex((index) => (index === i ? -1 : i))
-                  }
-                >
-                  <Text
-                    style={{ color: "white", fontSize: 11, fontWeight: "bold" }}
-                  >
-                    Marker2 {i + 1}
-                  </Text>
-
-                  <Image
-                    source={{
-                      uri: "https://images.unsplash.com/photo-1607326957431-29d25d2b386f",
-                    }}
-                    style={{ width: 50, height: 50 }}
-                  ></Image>
-                </TouchableOpacity>
-              </MapboxGL.MarkerView>
-            );
+          {currentPhotos.map((photo, index) => {
+            return <PhotoMapMarker photo={photo} index={index} />;
           })}
         </MapboxGL.MapView>
         <View style={trekkingMapStyle.buttonCurrentPosition}>
@@ -185,7 +121,6 @@ const TrekkingMap = () => {
           <TouchableOpacity
             onPress={() => {
               setIsPause(!isPause);
-              randomizeCoordinatesAndColors();
             }}
             style={trekkingMapStyle.button}
           >
