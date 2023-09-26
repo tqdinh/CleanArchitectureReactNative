@@ -80,3 +80,7 @@ ios/Gemma.xcodeproj/project.pbxproj
 # react-native-config codegen
 ios/tmp.xcconfig
 
+#Codebase
+Codebase/android/.gradle
+Codebase/android/build
+Codebase/yarn.lock

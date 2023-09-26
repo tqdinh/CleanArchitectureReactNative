@@ -1,11 +1,11 @@
 export interface Journey {
-  _id: Realm.BSON.ObjectId;
-  title: string;
-  image_header: string;
-  total_subcriber: number;
-  createdAt: Date;
-  status: JourneyStatus;
-  checkpointIds: string[] // store checkpoint ids
+  _id: number;
+  title?: string;
+  image_header?: string;
+  total_subcriber?: number;
+  createdAtTimestamp?: number;
+  status?: JourneyStatus;
+  checkpointIds?: number[]; // store checkpoint ids
 }
 
 export type JourneyModel = Journey | undefined;
@@ -16,4 +16,4 @@ export enum JourneyStatus {
   FINISHED = "FINISHED",
   PAUSED = "PAUSED",
   UNDEFINED = "UNDEFINED",
-};
+}

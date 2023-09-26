@@ -1,18 +1,28 @@
 import { JourneyLocalDataSource } from "DATA/dataSource/journey/JourneyLocalDataSource";
-import EntityCheckpoint from "DOMAIN/entities/EntityCheckpoint";
 import EntityJourney from "DOMAIN/entities/EntityJourney";
-import EntityPhoto from "DOMAIN/entities/EntityPhoto";
 
 export interface JourneyRepository {
   CreateNewJourney(entityJourney: EntityJourney): any;
   GetCurrentJourney(): EntityJourney | undefined;
   FinishCurrentJourney(): any;
+  GetAllJourneys(): EntityJourney[];
+  SetCurrentJourney(entityJourney: EntityJourney): any;
+  SetCurrentJourneyStatus(entityJourney: EntityJourney): any;
 }
 
 export class JourneyRepositoryImpl implements JourneyRepository {
   private localDataSource: JourneyLocalDataSource;
   constructor(_localDataSource: JourneyLocalDataSource) {
     this.localDataSource = _localDataSource;
+  }
+  SetCurrentJourneyStatus(entityJourney: EntityJourney) {
+    this.localDataSource.SetCurrentJourneyStatus(entityJourney);
+  }
+  SetCurrentJourney(entityJourney: EntityJourney) {
+    this.localDataSource.SetCurrentJourney(entityJourney);
+  }
+  GetAllJourneys(): EntityJourney[] {
+    return this.localDataSource.GetAllJourneys();
   }
 
   FinishCurrentJourney() {

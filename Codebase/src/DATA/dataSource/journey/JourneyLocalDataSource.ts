@@ -6,6 +6,7 @@ import { JourneySchema } from "localDB/realm/JourneySchema";
 import { useRealm } from "@realm/react";
 import MMKVStorage from "mmkv/MMKVStorage";
 import { UpdateMode } from "realm";
+import { trekkingActions } from "redux/trekking/trekkingSlice";
 
 export class JourneyLocalDataSource implements JourneyDataSource {
   private dispatch = useDispatch();
@@ -24,9 +25,12 @@ export class JourneyLocalDataSource implements JourneyDataSource {
   }
 
   private createNewJourneyInLocalDB(entityJourney: EntityJourney) {
-    const id = new Realm.BSON.ObjectId();
+    // query the last id
+    const journeys = this.realm.objects<JourneySchema>("Journey");
+    const id =
+      journeys.length === 0 ? 1 : journeys[journeys.length - 1]._id + 1;
     const journeySchemaName = "Journey";
-    const status = JourneyStatus.STARTED;
+    const status = JourneyStatus.UNDEFINED;
 
     // Write to Database
     this.realm.write(() => {
@@ -37,6 +41,7 @@ export class JourneyLocalDataSource implements JourneyDataSource {
         total_subcriber: entityJourney.getTotalSubcriber(),
         status: status,
         checkpoints: [],
+        createdAt: new Date(),
       });
     });
   }
@@ -75,6 +80,17 @@ export class JourneyLocalDataSource implements JourneyDataSource {
     return undefined;
   }
 
+  private getJourneyByIdInLocalDB(id: number): JourneySchema | undefined {
+    const journeys = this.realm.objects<JourneySchema>("Journey");
+    for (let i = journeys.length - 1; i >= 0; i--) {
+      const journey = journeys[i];
+      if (journey._id === id) {
+        return journey;
+      }
+    }
+    return undefined;
+  }
+
   CreateNewJourney(entityJourney: EntityJourney) {
     // Change state of other journey to FINISHED when create new Journey
     const journeys = this.realm.objects<JourneySchema>("Journey");
@@ -94,7 +110,22 @@ export class JourneyLocalDataSource implements JourneyDataSource {
     // Save New Journey in Redux Store
     // this.dispatch(trekkingActions.updateCurrentTrekkingJourney(newJourney));
 
-    this.QueryAllJourneysInLocalDB();
+    // update all journey to redux
+    const currentJourneys = this.realm.objects<JourneySchema>("Journey");
+    let allJourneyModels: JourneyModel[] = [];
+    for (let i = 0; i < currentJourneys.length; i++) {
+      const journey = currentJourneys[i];
+      const journeymodel: JourneyModel = {
+        _id: journey._id,
+        title: journey.title,
+        image_header: journey.image_header ?? "",
+        total_subcriber: journey.total_subcriber ?? 0,
+        createdAtTimestamp: journey.createdAt.getTime(),
+        status: journey.status,
+      };
+      allJourneyModels.push(journeymodel);
+    }
+    this.dispatch(trekkingActions.updateAllJourneys(allJourneyModels));
   }
 
   QueryAllJourneysInLocalDB(): EntityJourney[] {
@@ -108,19 +139,9 @@ export class JourneyLocalDataSource implements JourneyDataSource {
   }
 
   GetCurrentJourney(): EntityJourney | undefined {
-    // // Get From Local Storage
-    const currentJourney = this.getCurrentJourneyInLocalDB();
-    if (currentJourney === undefined) return;
-    // convert from JourneyModel To EntityJourney
-    const entityJourney = new EntityJourney(
-      currentJourney._id,
-      currentJourney.title,
-      currentJourney.image_header,
-      currentJourney.total_subcriber,
-      currentJourney.createdAt,
-      currentJourney.status
-    );
-    return entityJourney;
+    // get current journey id from store
+
+    return undefined;
   }
 
   FinishCurrentJourney() {
@@ -129,5 +150,64 @@ export class JourneyLocalDataSource implements JourneyDataSource {
 
     // set the status to FINISHED
     this.updateJourneyStatusInLocalDB(currentJourney, JourneyStatus.FINISHED);
+  }
+
+  GetAllJourneys(): EntityJourney[] {
+    let allJourneyEntities: EntityJourney[] = [];
+    let allJourneyModels: JourneyModel[] = [];
+    const journeys = this.realm.objects<JourneySchema>("Journey");
+    for (let i = 0; i < journeys.length; i++) {
+      const journey = journeys[i];
+      allJourneyEntities.push(
+        new EntityJourney(
+          journey._id,
+          journey.title,
+          journey.image_header,
+          journey.total_subcriber,
+          journey.createdAt,
+          journey.status
+        )
+      );
+
+      const journeymodel: JourneyModel = {
+        _id: journey._id,
+        title: journey.title,
+        image_header: journey.image_header ?? "",
+        total_subcriber: journey.total_subcriber ?? 0,
+        createdAtTimestamp: journey.createdAt.getTime(),
+        status: journey.status,
+      };
+      allJourneyModels.push(journeymodel);
+    }
+
+    // also update to redux
+    this.dispatch(trekkingActions.updateAllJourneys(allJourneyModels));
+
+    return allJourneyEntities;
+  }
+
+  SetCurrentJourney(entityJourney: EntityJourney) {
+    // no need to update to local db
+    const id = entityJourney.getId();
+    if (id === undefined) return;
+    // update to redux store
+    this.dispatch(trekkingActions.updateCurrentJourneyById(id));
+  }
+
+  SetCurrentJourneyStatus(entityJourney: EntityJourney) {
+    // update to local db
+    const id = entityJourney.getId();
+    const status = entityJourney.getStatus();
+    if (id !== undefined && status !== undefined) {
+      const currentJourneyRecord = this.getJourneyByIdInLocalDB(id);
+      if (currentJourneyRecord !== undefined) {
+        // update to local db
+        this.updateJourneyStatusInLocalDB(currentJourneyRecord, status);
+        // update to redux store
+        this.dispatch(
+          trekkingActions.updateCurrentJourneyStatusById({ id, status })
+        );
+      }
+    }
   }
 }

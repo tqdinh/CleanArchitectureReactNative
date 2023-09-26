@@ -1,54 +1,59 @@
-import { Text, TouchableOpacity, View } from "react-native"
-import React, { useCallback, useEffect, useState } from "react"
-import MapboxGL, { UserLocationRenderMode } from "@rnmapbox/maps"
-import { trekkingMapStyle } from "./style"
-import PhotoCarousel, { PhotoCarouselItem } from "./components/PhotoCarousel"
-import { testingPhotos } from "./components/testingPhotos"
-import { useFocusEffect } from "@react-navigation/native"
-import { useTrekkingMapViewModel } from "./TrekkingMapViewModel"
-import { JourneyStatus } from "../../models/JourneyModel"
-import { MaterialCommunityIcons, MaterialIcons } from "themes/appIcon"
+import { Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import MapboxGL, { UserLocationRenderMode } from "@rnmapbox/maps";
+import { trekkingMapStyle } from "./style";
+import PhotoCarousel, { PhotoCarouselItem } from "./components/PhotoCarousel";
+import { useFocusEffect } from "@react-navigation/native";
+import { useTrekkingMapViewModel } from "./TrekkingMapViewModel";
+import { JourneyModel, JourneyStatus } from "../../models/JourneyModel";
+import { MaterialCommunityIcons, MaterialIcons } from "themes/appIcon";
+import { RootState, useAppSelector } from "redux/store";
+import PhotoMapMarker from "./components/PhotoMapMarker";
+import { PhotoModel } from "models/PhotoModel";
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoidHFkaW5oaGNtdXMiLCJhIjoiY2xsNG5teDZzMDZkcDNmb2dpcnljbGpzbyJ9.FIQMCyKAxOnFiYZCZ9wsHQ"
-)
+);
 
 // TODO: useHook https://github.com/realm/FindOurDevices/blob/main/app/hooks/useLocation.js
-
 const TrekkingMap = () => {
-  const [isPause, setIsPause] = useState(true)
-  const [shownRecordsCarousel, setShownRecordsCarousel] = useState(false)
-  const [followUserLocation, setFollowUserLocation] = useState(true)
-  // const journeyStarted = useAppSelector((state: TrekkingState) => state.journeyStarted)
-  const [journeyStarted, setJourneyStarted] = useState(false)
-  const [journeyPhotos, setJourneyPhotos] = useState<PhotoCarouselItem[]>([])
+  const [isPause, setIsPause] = useState(true);
+  const [shownRecordsCarousel, setShownRecordsCarousel] = useState(false);
+  const [followUserLocation, setFollowUserLocation] = useState(true);
+  const [journeyPhotos, setJourneyPhotos] = useState<PhotoCarouselItem[]>([]);
+
+  const currentJourney = useAppSelector<JourneyModel>(
+    (state: RootState) => state.trekking.currentJourney
+  );
+
+  const journeyStarted = currentJourney?.status === JourneyStatus.STARTED;
+
+  const currentPhotos = useAppSelector<PhotoModel[]>(
+    (state: RootState) => state.trekking.currentPhotos
+  );
 
   const {
     goToTrekkingCamera,
     startNewJourney,
     finishJourney,
-    getSavedJourneyStatusInLocalStorage,
     GetAllPhotosFromCurrentJourney,
-  } = useTrekkingMapViewModel()
+  } = useTrekkingMapViewModel();
 
   useFocusEffect(
     useCallback(() => {
-      requestAndroidLocationPermissions()
-      setJourneyStarted(
-        getSavedJourneyStatusInLocalStorage() === JourneyStatus.STARTED
-      )
+      requestAndroidLocationPermissions();
     }, [])
-  )
+  );
 
-  useEffect(()=> {
+  useEffect(() => {
     if (shownRecordsCarousel) {
-      setJourneyPhotos(GetAllPhotosFromCurrentJourney())
+      setJourneyPhotos(GetAllPhotosFromCurrentJourney());
     }
-    console.log(journeyPhotos)
-  }, [shownRecordsCarousel])
+    console.log(journeyPhotos);
+  }, [shownRecordsCarousel]);
 
   const requestAndroidLocationPermissions = async () => {
-    await MapboxGL.requestAndroidLocationPermissions()
-  }
+    await MapboxGL.requestAndroidLocationPermissions();
+  };
 
   return (
     <View style={trekkingMapStyle.container}>
@@ -63,16 +68,22 @@ const TrekkingMap = () => {
             followZoomLevel={18}
             onUserTrackingModeChange={(event) => {
               if (!event.nativeEvent.payload.followUserLocation) {
-                setFollowUserLocation(false)
+                setFollowUserLocation(false);
               }
             }}
+            zoomLevel={14}
           />
+
           <MapboxGL.UserLocation
             visible={true}
             renderMode={UserLocationRenderMode.Native}
             showsUserHeadingIndicator={true}
             androidRenderMode={"normal"}
           />
+
+          {currentPhotos.map((photo, index) => {
+            return <PhotoMapMarker photo={photo} index={index} />;
+          })}
         </MapboxGL.MapView>
         <View style={trekkingMapStyle.buttonCurrentPosition}>
           <TouchableOpacity
@@ -109,7 +120,7 @@ const TrekkingMap = () => {
         <View style={trekkingMapStyle.buttonContainer}>
           <TouchableOpacity
             onPress={() => {
-              setIsPause(!isPause)
+              setIsPause(!isPause);
             }}
             style={trekkingMapStyle.button}
           >
@@ -121,9 +132,9 @@ const TrekkingMap = () => {
           <TouchableOpacity
             onPress={() => {
               if (isPause) {
-                goToTrekkingCamera()
+                goToTrekkingCamera();
               } else {
-                setShownRecordsCarousel(true)
+                setShownRecordsCarousel(true);
               }
             }}
             style={[trekkingMapStyle.button, { backgroundColor: "#D4F1F4" }]}
@@ -137,9 +148,8 @@ const TrekkingMap = () => {
 
           <TouchableOpacity
             onPress={() => {
-              setIsPause(!isPause)
-              setJourneyStarted(false)
-              finishJourney()
+              setIsPause(!isPause);
+              finishJourney();
             }}
             disabled={isPause}
             style={[trekkingMapStyle.button, { opacity: isPause ? 0 : 1 }]}
@@ -153,8 +163,7 @@ const TrekkingMap = () => {
         <View style={trekkingMapStyle.buttonContainer}>
           <TouchableOpacity
             onPress={() => {
-              setJourneyStarted(true)
-              startNewJourney()
+              startNewJourney();
             }}
             style={[trekkingMapStyle.button]}
           >
@@ -163,7 +172,7 @@ const TrekkingMap = () => {
         </View>
       )}
     </View>
-  )
-}
+  );
+};
 
-export default TrekkingMap
+export default TrekkingMap;
