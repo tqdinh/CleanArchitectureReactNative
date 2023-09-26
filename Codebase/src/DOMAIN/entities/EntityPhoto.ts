@@ -1,22 +1,27 @@
+import { Location } from "@rnmapbox/maps";
+
 export default class EntityPhoto {
   private photo_path: string;
   private checkpoint_id?: number;
   private name?: string;
-  private createdAt?: Date;
+  private createdAtTimestamp?: number;
   private description?: string;
+  private location?: Location;
 
   constructor(
     _photo_path: string,
     _checkpoint_id?: number,
     _name?: string,
     _description?: string,
-    _createdAt?: Date
+    _createdAtTimestamp?: number,
+    _location?: Location
   ) {
     this.checkpoint_id = _checkpoint_id;
     this.photo_path = _photo_path;
     this.name = _name;
-    this.createdAt = _createdAt;
+    this.createdAtTimestamp = _createdAtTimestamp;
     this.description = _description;
+    this.location = _location;
   }
 
   public getPhotoPath() {
@@ -29,5 +34,9 @@ export default class EntityPhoto {
   public getDescription() {
     if (this.description === undefined) return "Photo Description";
     return this.description;
+  }
+
+  public getLocation() {
+    return this.location;
   }
 }

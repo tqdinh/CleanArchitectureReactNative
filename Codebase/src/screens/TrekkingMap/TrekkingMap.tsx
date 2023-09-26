@@ -3,30 +3,33 @@ import React, { useCallback, useEffect, useState } from "react";
 import MapboxGL, { UserLocationRenderMode } from "@rnmapbox/maps";
 import { trekkingMapStyle } from "./style";
 import PhotoCarousel, { PhotoCarouselItem } from "./components/PhotoCarousel";
-import { testingPhotos } from "./components/testingPhotos";
 import { useFocusEffect } from "@react-navigation/native";
 import { useTrekkingMapViewModel } from "./TrekkingMapViewModel";
-import { JourneyStatus } from "../../models/JourneyModel";
+import { JourneyModel, JourneyStatus } from "../../models/JourneyModel";
 import { MaterialCommunityIcons, MaterialIcons } from "themes/appIcon";
 import { RootState, useAppSelector } from "redux/store";
+import PhotoMapMarker from "./components/PhotoMapMarker";
+import { PhotoModel } from "models/PhotoModel";
 MapboxGL.setAccessToken(
   "pk.eyJ1IjoidHFkaW5oaGNtdXMiLCJhIjoiY2xsNG5teDZzMDZkcDNmb2dpcnljbGpzbyJ9.FIQMCyKAxOnFiYZCZ9wsHQ"
 );
 
 // TODO: useHook https://github.com/realm/FindOurDevices/blob/main/app/hooks/useLocation.js
-
 const TrekkingMap = () => {
   const [isPause, setIsPause] = useState(true);
   const [shownRecordsCarousel, setShownRecordsCarousel] = useState(false);
   const [followUserLocation, setFollowUserLocation] = useState(true);
-  // const journeyStarted = useAppSelector((state: TrekkingState) => state.journeyStarted)
   const [journeyPhotos, setJourneyPhotos] = useState<PhotoCarouselItem[]>([]);
 
-  const currentJourney = useAppSelector(
+  const currentJourney = useAppSelector<JourneyModel>(
     (state: RootState) => state.trekking.currentJourney
   );
 
   const journeyStarted = currentJourney?.status === JourneyStatus.STARTED;
+
+  const currentPhotos = useAppSelector<PhotoModel[]>(
+    (state: RootState) => state.trekking.currentPhotos
+  );
 
   const {
     goToTrekkingCamera,
@@ -68,13 +71,19 @@ const TrekkingMap = () => {
                 setFollowUserLocation(false);
               }
             }}
+            zoomLevel={14}
           />
+
           <MapboxGL.UserLocation
             visible={true}
             renderMode={UserLocationRenderMode.Native}
             showsUserHeadingIndicator={true}
             androidRenderMode={"normal"}
           />
+
+          {currentPhotos.map((photo, index) => {
+            return <PhotoMapMarker photo={photo} index={index} />;
+          })}
         </MapboxGL.MapView>
         <View style={trekkingMapStyle.buttonCurrentPosition}>
           <TouchableOpacity

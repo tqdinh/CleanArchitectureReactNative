@@ -1,20 +1,20 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { CheckpointModel } from "models/CheckpointModel";
 import { JourneyModel, JourneyStatus } from "models/JourneyModel";
-import { TrekkingPhoto } from "models/PhotoModel";
+import { PhotoModel } from "models/PhotoModel";
 import { RootState } from "redux/store";
 
 export interface TrekkingState {
   currentJourney: JourneyModel;
   currentTrekkingCheckpoint: CheckpointModel;
-  currentTrekkingPhoto: TrekkingPhoto | undefined;
+  currentPhotos: PhotoModel[];
   allJourneys: JourneyModel[];
 }
 
 const initialState: TrekkingState = {
   currentJourney: undefined,
   currentTrekkingCheckpoint: undefined,
-  currentTrekkingPhoto: undefined,
+  currentPhotos: [],
   allJourneys: [],
 };
 
@@ -22,11 +22,11 @@ const trekkingSlice = createSlice({
   name: "TrekkingSlice",
   initialState,
   reducers: {
-    updateCurrentTrekkingPhoto(
+    updateCurrentPhotos(
       state,
-      action: PayloadAction<TrekkingPhoto | undefined>
+      action: PayloadAction<PhotoModel[]>
     ) {
-      state.currentTrekkingPhoto = action.payload;
+      state.currentPhotos = action.payload;
     },
     updateCurrentJourneyById(state, action: PayloadAction<number>) {
       if (state.allJourneys.length === 0) return;
